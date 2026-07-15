@@ -5,14 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAS Salary Dashboard — MD Hasibur Rahman Murad</title>
 <meta name="description" content="Interactive SAS Visual Analytics salary-by-job-title dashboard with box-plot statistics, built by MD Hasibur Rahman Murad.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
+<div id="progress"></div>
 <nav><div class="nav-inner">
   <a class="brand" href="../index.html">Hasibur&nbsp;Rahman&nbsp;Murad</a>
   <div class="nav-links">
     <a href="../index.html#dashboards">All Dashboards</a>
     <a href="../index.html#projects">Projects</a>
+    <button class="menubtn" id="menuBtn" aria-label="Menu">&#9776;</button>
     <button class="themebtn" id="themeToggle" aria-label="Toggle theme">🌗</button>
   </div>
 </div></nav>
@@ -60,6 +65,7 @@
 
 <footer><div class="wrap">© <span id="yr"></span> MD Hasibur Rahman Murad · <a href="../index.html">Back to portfolio</a></div></footer>
 
+<button id="toTop" aria-label="Back to top">&#8593;</button>
 <script src="../common.js"></script>
 <script>
 (function(){
@@ -89,7 +95,7 @@
     var n=DATA.length,band=plotW/n,pad=band*0.22,bW=band-2*pad;
     DATA.forEach(function(d,i){
       var val=isAvg?d[6]:d[8],h=(val/yMax)*plotH,bx=x0+i*band+pad,by=y1-h;
-      var r=el('rect',{class:'bar',x:bx.toFixed(1),y:by.toFixed(1),width:bW.toFixed(1),height:h.toFixed(1),rx:4,fill:c});
+      var r=el('rect',{class:'bar anim-v',style:'animation-delay:'+(i*45)+'ms',x:bx.toFixed(1),y:by.toFixed(1),width:bW.toFixed(1),height:h.toFixed(1),rx:4,fill:c});
       r.addEventListener('mousemove',function(ev){showTip(ev,d);});r.addEventListener('mouseleave',hideTip);svg.appendChild(r);
       var vl=el('text',{class:'barlab',x:(bx+bW/2).toFixed(1),y:(by-5).toFixed(1)});vl.textContent=isAvg?'$'+Math.round(d[6]/1000)+'k':(''+d[8]);svg.appendChild(vl);
       // 2-line label

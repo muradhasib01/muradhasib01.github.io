@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sales by U.S. State — MD Hasibur Rahman Murad</title>
 <meta name="description" content="Interactive US tile-grid map of Superstore sales by state, built by MD Hasibur Rahman Murad.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
 <style>
   .tile{stroke:var(--surface);stroke-width:3;cursor:default;transition:opacity .12s}
@@ -17,11 +20,13 @@
 </style>
 </head>
 <body>
+<div id="progress"></div>
 <nav><div class="nav-inner">
   <a class="brand" href="../index.html">Hasibur&nbsp;Rahman&nbsp;Murad</a>
   <div class="nav-links">
     <a href="../index.html#dashboards">All Dashboards</a>
     <a href="../index.html#projects">Projects</a>
+    <button class="menubtn" id="menuBtn" aria-label="Menu">&#9776;</button>
     <button class="themebtn" id="themeToggle" aria-label="Toggle theme">🌗</button>
   </div>
 </div></nav>
@@ -70,6 +75,7 @@
 
 <footer><div class="wrap">© <span id="yr"></span> MD Hasibur Rahman Murad · <a href="../index.html">Back to portfolio</a></div></footer>
 
+<button id="toTop" aria-label="Back to top">&#8593;</button>
 <script src="../common.js"></script>
 <script>
 (function(){
@@ -132,7 +138,7 @@
         return;
       }
       var v=metricVal(abbr), b=binOf(v,q), fill=R[b];
-      var r=el('rect',{class:'tile',x:x,y:y,width:size,height:size,rx:7,fill:fill});
+      var r=el('rect',{class:'tile anim-pop',style:'animation-delay:'+((pos[0]+pos[1])*22)+'ms',x:x,y:y,width:size,height:size,rx:7,fill:fill});
       r.addEventListener('mousemove',function(ev){showTip(ev,abbr);});r.addEventListener('mouseleave',hideTip);svg.appendChild(r);
       var txtColor = (darkMode()? (b<=1?'#c9d6ef':'#0b1220') : (b>=3?'#ffffff':'#0b1220'));
       var t=el('text',{class:'tile-lab',x:x+size/2,y:y+size/2,fill:txtColor});t.textContent=abbr;svg.appendChild(t);

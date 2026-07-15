@@ -5,36 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MD Hasibur Rahman Murad — Business Intelligence & Data Analyst</title>
 <meta name="description" content="Portfolio of MD Hasibur Rahman Murad — aspiring Business Intelligence / Data Analyst. Interactive dashboards, SQL, dimensional modeling, Tableau, SAS, and SAP BW projects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-  .hero{padding:92px 0 68px;position:relative;overflow:hidden}
-  .hero:before{content:"";position:absolute;inset:-40% -10% auto -10%;height:120%;z-index:-1;
-    background:radial-gradient(50% 55% at 18% 8%,var(--accent-soft),transparent 62%),
-               radial-gradient(40% 45% at 88% 0%,color-mix(in srgb,var(--accent-2) 26%,transparent),transparent 60%);
-    animation:float 14s ease-in-out infinite alternate}
-  @keyframes float{to{transform:translateY(18px) scale(1.04)}}
-  @media (prefers-reduced-motion:reduce){.hero:before{animation:none}}
-  .avatar{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:800;font-size:2rem;box-shadow:var(--shadow);margin-bottom:22px}
-  .hero h1{font-size:clamp(2.2rem,5.4vw,3.4rem);letter-spacing:-.035em;line-height:1.08}
-  .hero .role{color:var(--accent);font-weight:700;margin-top:10px;font-size:1.18rem}
-  .hero p.tagline{color:var(--text-2);font-size:1.12rem;max-width:640px;margin-top:16px}
+  .hero{padding:96px 0 72px;position:relative;overflow:hidden}
+  /* subtle data-grid backdrop — the analyst's world, not a gradient hero */
+  .hero:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(70% 60% at 20% 0%,#000,transparent 75%);
+            mask-image:radial-gradient(70% 60% at 20% 0%,#000,transparent 75%)}
+  .hero:after{content:"";position:absolute;inset:-30% auto auto -10%;width:60%;height:120%;z-index:-1;
+    background:radial-gradient(45% 50% at 20% 10%,var(--accent-soft),transparent 70%)}
+  .avatar{width:78px;height:78px;border-radius:18px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:700;font-size:1.7rem;
+    font-family:var(--mono);box-shadow:var(--shadow),0 0 0 5px var(--accent-soft);margin-bottom:24px}
+  .hero h1{font-size:clamp(2.2rem,5.4vw,3.4rem);line-height:1.06}
+  .hero .role{font-family:var(--mono);color:var(--accent);font-weight:500;margin-top:12px;font-size:1.02rem;letter-spacing:.01em}
+  .hero p.tagline{color:var(--text-2);font-size:1.1rem;max-width:600px;margin-top:18px}
   .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
   .skills-grid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:34px}
-  .card h3{font-size:1.05rem;margin-bottom:12px;display:flex;align-items:center;gap:9px}
-  .card h3 .dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}
-  .pills{display:flex;flex-wrap:wrap;gap:8px}
-  .pill{font-size:.82rem;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:1px solid transparent}
+  .card h3{font-size:1.02rem;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+  .card h3 .dot{width:8px;height:8px;border-radius:2px;background:var(--accent)}
+  .pills{display:flex;flex-wrap:wrap;gap:7px}
+  .pill{font-family:var(--mono);font-size:.76rem;font-weight:400;padding:5px 10px;border-radius:7px;background:var(--surface-2);
+    color:var(--text-2);border:1px solid var(--border);transition:.14s}
+  .pill:hover{border-color:var(--accent);color:var(--accent)}
   .featured{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow);margin-top:26px}
   .pipeline{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0 6px}
-  .step{flex:1;min-width:170px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px}
-  .step .n{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
-  .step h4{margin:6px 0 4px;font-size:1rem}.step p{color:var(--text-2);font-size:.88rem}
+  .step{flex:1;min-width:170px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;transition:.16s}
+  .step:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .step .n{font-family:var(--mono);font-size:.68rem;font-weight:500;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
+  .step h4{margin:8px 0 4px;font-size:1rem}.step p{color:var(--text-2);font-size:.87rem}
   .contact{text-align:center}.contact .btn{margin:6px}
 </style>
 </head>
 <body>
 
+<div id="progress"></div>
 <nav><div class="nav-inner">
   <span class="brand">Hasibur&nbsp;Rahman&nbsp;Murad</span>
   <div class="nav-links">
@@ -43,7 +53,8 @@
     <a href="#dashboards">Dashboards</a>
     <a href="#projects">Projects</a>
     <a href="#contact">Contact</a>
-    <button class="themebtn" id="themeToggle" title="Toggle theme" aria-label="Toggle light/dark theme">🌗</button>
+    <button class="menubtn" id="menuBtn" aria-label="Menu">☰</button>
+    <button class="themebtn" id="themeToggle" title="Toggle theme" aria-label="Toggle light/dark theme">☾</button>
   </div>
 </div></nav>
 
@@ -207,6 +218,7 @@
 
 <footer><div class="wrap">© <span id="yr"></span> MD Hasibur Rahman Murad · Built with vanilla JS + GitHub Pages</div></footer>
 
+<button id="toTop" aria-label="Back to top">↑</button>
 <script src="common.js"></script>
 </body>
 </html>

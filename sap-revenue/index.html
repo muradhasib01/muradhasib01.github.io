@@ -5,14 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SAP BW Revenue Dashboard — MD Hasibur Rahman Murad</title>
 <meta name="description" content="Interactive SAP Business Warehouse revenue-by-product dashboard (Global Bike Inc.), built by MD Hasibur Rahman Murad.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
+<div id="progress"></div>
 <nav><div class="nav-inner">
   <a class="brand" href="../index.html">Hasibur&nbsp;Rahman&nbsp;Murad</a>
   <div class="nav-links">
     <a href="../index.html#dashboards">All Dashboards</a>
     <a href="../index.html#projects">Projects</a>
+    <button class="menubtn" id="menuBtn" aria-label="Menu">&#9776;</button>
     <button class="themebtn" id="themeToggle" aria-label="Toggle theme">🌗</button>
   </div>
 </div></nav>
@@ -61,6 +66,7 @@
 
 <footer><div class="wrap">© <span id="yr"></span> MD Hasibur Rahman Murad · <a href="../index.html">Back to portfolio</a></div></footer>
 
+<button id="toTop" aria-label="Back to top">&#8593;</button>
 <script src="../common.js"></script>
 <script>
 (function(){
@@ -112,7 +118,7 @@
       var lb=el('text',{x:x0-10,y:by+bh-3,'text-anchor':'end',class:'ylab'});
       var nm=d[1].length>30?d[1].slice(0,29)+'…':d[1]; lb.textContent=nm; svg.appendChild(lb);
       // bar
-      var r=el('rect',{class:'bar',x:x0,y:by.toFixed(1),width:Math.max(2,w).toFixed(1),height:bh,rx:4,fill:c});
+      var r=el('rect',{class:'bar anim-h',style:'animation-delay:'+(i*28)+'ms',x:x0,y:by.toFixed(1),width:Math.max(2,w).toFixed(1),height:bh,rx:4,fill:c});
       r.addEventListener('mousemove',function(ev){showTip(ev,d);}); r.addEventListener('mouseleave',hideTip); svg.appendChild(r);
       // value label
       var vl=el('text',{x:(x0+w+7).toFixed(1),y:by+bh-3,class:'barlabh'}); vl.textContent=fmt(d[2]); svg.appendChild(vl);

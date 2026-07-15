@@ -5,14 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Coffee Chain Sales Dashboard — MD Hasibur Rahman Murad</title>
 <meta name="description" content="Interactive Coffee Chain sales dashboard — sales by market and product type, built from a Tableau analysis by MD Hasibur Rahman Murad.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
+<div id="progress"></div>
 <nav><div class="nav-inner">
   <a class="brand" href="../index.html">Hasibur&nbsp;Rahman&nbsp;Murad</a>
   <div class="nav-links">
     <a href="../index.html#dashboards">All Dashboards</a>
     <a href="../index.html#projects">Projects</a>
+    <button class="menubtn" id="menuBtn" aria-label="Menu">&#9776;</button>
     <button class="themebtn" id="themeToggle" aria-label="Toggle theme">🌗</button>
   </div>
 </div></nav>
@@ -65,6 +70,7 @@
 
 <footer><div class="wrap">© <span id="yr"></span> MD Hasibur Rahman Murad · <a href="../index.html">Back to portfolio</a></div></footer>
 
+<button id="toTop" aria-label="Back to top">&#8593;</button>
 <script src="../common.js"></script>
 <script>
 (function(){
@@ -93,7 +99,7 @@
     var gW=plotW/Ms.length,innerPad=gW*0.16,barsArea=gW-2*innerPad,p=Ps.length,gap=Math.min(5,barsArea*0.06),bW=p>0?(barsArea-(p-1)*gap)/p:0;
     Ms.forEach(function(mk,mi){var gx=x0+mi*gW;
       Ps.forEach(function(pr,pi){var v=SALES[mk][pr]||0,h=(v/yMax)*plotH,bx=gx+innerPad+pi*(bW+gap),by=y1-h,ci=PRODUCTS.indexOf(pr);
-        if(v>0){var r=el('rect',{class:'bar',x:bx.toFixed(1),y:by.toFixed(1),width:bW.toFixed(1),height:h.toFixed(1),rx:Math.min(4,bW/3).toFixed(1),fill:col(ci)});
+        if(v>0){var r=el('rect',{class:'bar anim-v',style:'animation-delay:'+((mi*4+pi)*35)+'ms',x:bx.toFixed(1),y:by.toFixed(1),width:bW.toFixed(1),height:h.toFixed(1),rx:Math.min(4,bW/3).toFixed(1),fill:col(ci)});
           r.addEventListener('mousemove',function(ev){showTip(ev,mk,pr,v);});r.addEventListener('mouseleave',hideTip);svg.appendChild(r);
           if(bW>=16){var lb=el('text',{class:'barlab',x:(bx+bW/2).toFixed(1),y:(by-4).toFixed(1)});lb.textContent='$'+Math.round(v/1000)+'k';svg.appendChild(lb);}}});
       var xl=el('text',{class:'xlab',x:(gx+gW/2).toFixed(1),y:y1+24});xl.textContent=mk;svg.appendChild(xl);});
