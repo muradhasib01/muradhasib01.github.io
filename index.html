@@ -4,101 +4,163 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MD Hasibur Rahman Murad — Business Intelligence & Data Analyst</title>
-<meta name="description" content="Portfolio of MD Hasibur Rahman Murad — aspiring Business Intelligence / Data Analyst. SQL, dimensional modeling, Tableau, SAS, and SAP BW projects.">
+<meta name="description" content="Portfolio of MD Hasibur Rahman Murad — aspiring Business Intelligence / Data Analyst. SQL, dimensional modeling, an interactive Coffee Chain dashboard, Tableau, SAS, and SAP BW projects.">
 <style>
   :root{
-    --bg:#f7f8fb; --surface:#ffffff; --text:#1a2233; --muted:#5b6577;
-    --border:#e6e9f0; --accent:#2563eb; --accent-soft:#dbe6ff; --accent-2:#0e9384;
-    --shadow:0 1px 3px rgba(20,30,60,.06),0 8px 24px rgba(20,30,60,.06);
-    --radius:14px; --maxw:1080px;
+    --bg:#f9f9f7; --surface:#ffffff; --surface-2:#fcfcfb; --text:#0b0b0b; --text-2:#52514e; --muted:#898781;
+    --border:#e6e9f0; --grid:#e1e0d9; --baseline:#c3c2b7; --accent:#2563eb; --accent-soft:#dbe6ff; --accent-2:#1baf7a;
+    --shadow:0 1px 3px rgba(20,30,60,.06),0 10px 30px rgba(20,30,60,.07);
+    --radius:16px; --maxw:1120px;
+    /* categorical (validated reference palette, slots 1-4) */
+    --s1:#2a78d6; --s2:#1baf7a; --s3:#eda100; --s4:#008300;
+    color-scheme:light;
   }
+  :root[data-theme="dark"], :root:where(:not([data-theme="light"])){}
   @media (prefers-color-scheme:dark){
-    :root{
-      --bg:#0d1117; --surface:#161b22; --text:#e6edf3; --muted:#9aa7b8;
-      --border:#232b36; --accent:#4d8bff; --accent-soft:#16233d; --accent-2:#2dd4bf;
-      --shadow:0 1px 3px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+    :root:where(:not([data-theme="light"])){
+      --bg:#0d0d0d; --surface:#161b22; --surface-2:#1a1a19; --text:#ffffff; --text-2:#c3c2b7; --muted:#898781;
+      --border:#232b36; --grid:#2c2c2a; --baseline:#383835; --accent:#4d8bff; --accent-soft:#16233d; --accent-2:#2dd4bf;
+      --shadow:0 1px 3px rgba(0,0,0,.4),0 12px 34px rgba(0,0,0,.4);
+      --s1:#3987e5; --s2:#199e70; --s3:#c98500; --s4:#008300;
+      color-scheme:dark;
     }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0d0d0d; --surface:#161b22; --surface-2:#1a1a19; --text:#ffffff; --text-2:#c3c2b7; --muted:#898781;
+    --border:#232b36; --grid:#2c2c2a; --baseline:#383835; --accent:#4d8bff; --accent-soft:#16233d; --accent-2:#2dd4bf;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 12px 34px rgba(0,0,0,.4);
+    --s1:#3987e5; --s2:#199e70; --s3:#c98500; --s4:#008300; color-scheme:dark;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased;
-  }
-  a{color:var(--accent);text-decoration:none}
-  a:hover{text-decoration:underline}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
-  section{padding:76px 0}
-  h2{font-size:1.75rem;letter-spacing:-.02em;margin-bottom:8px}
-  .section-tag{color:var(--accent);font-weight:700;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase}
-  .lead{color:var(--muted);max-width:640px;margin-top:6px}
+  section{padding:80px 0}
+  h2{font-size:clamp(1.6rem,3.4vw,2rem);letter-spacing:-.025em;margin-bottom:8px}
+  .section-tag{color:var(--accent);font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase}
+  .lead{color:var(--text-2);max-width:680px;margin-top:8px}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
   /* NAV */
-  nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 85%,transparent);
-      backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .nav-inner{max-width:var(--maxw);margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+  nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 82%,transparent);
+      backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+  .nav-inner{max-width:var(--maxw);margin:0 auto;padding:13px 24px;display:flex;align-items:center;justify-content:space-between}
   .brand{font-weight:800;letter-spacing:-.02em}
-  .nav-links{display:flex;gap:26px}
-  .nav-links a{color:var(--muted);font-weight:600;font-size:.93rem}
+  .nav-links{display:flex;gap:24px;align-items:center}
+  .nav-links a{color:var(--text-2);font-weight:600;font-size:.92rem}
   .nav-links a:hover{color:var(--text);text-decoration:none}
-  @media(max-width:640px){.nav-links{display:none}}
+  .themebtn{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;
+    font-size:.95rem;color:var(--text);line-height:1}
+  @media(max-width:680px){.nav-links a:not(.themebtn){display:none}}
 
   /* HERO */
-  .hero{padding:88px 0 64px;position:relative;overflow:hidden}
-  .hero:before{content:"";position:absolute;inset:0;z-index:-1;
-    background:radial-gradient(60% 60% at 20% 0%,var(--accent-soft),transparent 70%)}
-  .avatar{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:800;font-size:1.9rem;
+  .hero{padding:92px 0 68px;position:relative;overflow:hidden}
+  .hero:before{content:"";position:absolute;inset:-40% -10% auto -10%;height:120%;z-index:-1;
+    background:radial-gradient(50% 55% at 18% 8%,var(--accent-soft),transparent 62%),
+               radial-gradient(40% 45% at 88% 0%,color-mix(in srgb,var(--accent-2) 26%,transparent),transparent 60%);
+    animation:float 14s ease-in-out infinite alternate}
+  @keyframes float{to{transform:translateY(18px) scale(1.04)}}
+  .avatar{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:800;font-size:2rem;
     box-shadow:var(--shadow);margin-bottom:22px}
-  .hero h1{font-size:clamp(2.1rem,5vw,3.2rem);letter-spacing:-.03em;line-height:1.1}
-  .hero .role{color:var(--accent);font-weight:700;margin-top:10px;font-size:1.15rem}
-  .hero p.tagline{color:var(--muted);font-size:1.1rem;max-width:620px;margin-top:16px}
-  .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;font-weight:650;
-    font-size:.95rem;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:.15s}
-  .btn:hover{text-decoration:none;transform:translateY(-1px);box-shadow:var(--shadow)}
+  .hero h1{font-size:clamp(2.2rem,5.4vw,3.4rem);letter-spacing:-.035em;line-height:1.08}
+  .hero .role{color:var(--accent);font-weight:700;margin-top:10px;font-size:1.18rem}
+  .hero p.tagline{color:var(--text-2);font-size:1.12rem;max-width:640px;margin-top:16px}
+  .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:11px;font-weight:650;
+    font-size:.95rem;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:.16s;cursor:pointer}
+  .btn:hover{text-decoration:none;transform:translateY(-2px);box-shadow:var(--shadow)}
   .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
 
-  /* SKILLS */
   .grid{display:grid;gap:18px}
-  .skills-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:34px}
   .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+
+  /* SKILLS */
+  .skills-grid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:34px}
   .card h3{font-size:1.05rem;margin-bottom:12px;display:flex;align-items:center;gap:9px}
   .card h3 .dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}
   .pills{display:flex;flex-wrap:wrap;gap:8px}
-  .pill{font-size:.82rem;font-weight:600;padding:5px 11px;border-radius:999px;
-    background:var(--accent-soft);color:var(--accent);border:1px solid transparent}
-  @media(prefers-color-scheme:dark){.pill{color:var(--accent-2);background:var(--accent-soft)}}
+  .pill{font-size:.82rem;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--accent-soft);
+    color:var(--accent);border:1px solid transparent}
 
-  /* FEATURED */
-  .featured{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-    padding:30px;box-shadow:var(--shadow);margin-top:30px}
-  .pipeline{display:flex;flex-wrap:wrap;align-items:stretch;gap:12px;margin:22px 0 6px}
-  .step{flex:1;min-width:170px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px}
-  .step .n{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
-  .step h4{margin:6px 0 4px;font-size:1rem}
-  .step p{color:var(--muted);font-size:.88rem}
-  .step .arrow{display:none}
+  /* KPI */
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-top:6px}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow)}
+  .kpi .label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .kpi .val{font-size:1.9rem;font-weight:800;letter-spacing:-.02em;margin-top:6px;font-variant-numeric:tabular-nums}
+  .kpi .sub{font-size:.85rem;color:var(--text-2);margin-top:2px}
+
+  /* DASHBOARD */
+  .dash{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:26px;margin-top:26px}
+  .dash-head{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:flex-end;margin-bottom:8px}
+  .dash-head h3{font-size:1.2rem;letter-spacing:-.02em}
+  .dash-head p{color:var(--text-2);font-size:.9rem}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 6px}
+  .controls .ctl-label{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+  .chip{font-size:.85rem;font-weight:600;padding:6px 13px;border-radius:999px;border:1px solid var(--border);
+    background:var(--surface-2);color:var(--text-2);cursor:pointer;transition:.14s}
+  .chip:hover{border-color:var(--accent)}
+  .chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:6px 0 4px}
+  .lg{display:inline-flex;align-items:center;gap:7px;font-size:.85rem;font-weight:600;cursor:pointer;color:var(--text-2);
+    user-select:none;padding:3px 6px;border-radius:8px}
+  .lg .sw{width:13px;height:13px;border-radius:4px;flex:none}
+  .lg.off{opacity:.38;text-decoration:line-through}
+  .chart-holder{position:relative;width:100%;margin-top:8px}
+  svg.chart{width:100%;height:auto;display:block;touch-action:none}
+  .tick text{fill:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+  .gridline{stroke:var(--grid);stroke-width:1}
+  .baseline{stroke:var(--baseline);stroke-width:1.5}
+  .xlab{fill:var(--text-2);font-size:12.5px;font-weight:600;text-anchor:middle}
+  .barlab{fill:var(--text-2);font-size:9.5px;font-weight:600;text-anchor:middle;font-variant-numeric:tabular-nums;pointer-events:none}
+  .bar{transition:opacity .12s}
+  .bar:hover{opacity:.82}
+  .tip{position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-115%);transition:opacity .1s;
+    background:var(--text);color:var(--bg);padding:8px 11px;border-radius:9px;font-size:.8rem;white-space:nowrap;
+    box-shadow:0 6px 20px rgba(0,0,0,.28);z-index:5;line-height:1.45}
+  .tip b{font-weight:700}
+  .tip .tt-metric{color:var(--accent-2);font-weight:700}
+  table.dtable{width:100%;border-collapse:collapse;margin-top:14px;font-size:.86rem;font-variant-numeric:tabular-nums}
+  table.dtable th,table.dtable td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:right}
+  table.dtable th:first-child,table.dtable td:first-child{text-align:left}
+  table.dtable thead th{color:var(--muted);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+  table.dtable tfoot td{font-weight:800;border-top:2px solid var(--baseline);border-bottom:none}
+  .hidden{display:none}
+  .insight{margin-top:16px;padding:14px 16px;background:var(--accent-soft);border-radius:12px;font-size:.92rem;color:var(--text)}
+  .insight b{color:var(--accent)}
 
   /* PROJECTS */
   .projects-grid{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:34px}
   .proj{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
-    box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.15s}
-  .proj:hover{transform:translateY(-3px)}
-  .proj .thumb{height:168px;background:var(--accent-soft);overflow:hidden;display:grid;place-items:center}
+    box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.16s}
+  .proj:hover{transform:translateY(-4px)}
+  .proj .thumb{height:170px;background:var(--accent-soft);overflow:hidden;display:grid;place-items:center}
   .proj .thumb img{width:100%;height:100%;object-fit:cover}
-  .proj .thumb.noimg{font-size:2.4rem}
+  .proj .thumb.noimg{font-size:2.5rem}
   .proj .body{padding:20px;display:flex;flex-direction:column;gap:8px;flex:1}
   .proj .kicker{font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
   .proj h3{font-size:1.12rem;letter-spacing:-.01em}
-  .proj p{color:var(--muted);font-size:.92rem;flex:1}
+  .proj p{color:var(--text-2);font-size:.92rem;flex:1}
   .proj .links{display:flex;gap:14px;font-size:.9rem;font-weight:650;margin-top:4px}
 
-  /* CONTACT */
-  .contact{text-align:center}
-  .contact .btn{margin:6px}
-  footer{border-top:1px solid var(--border);padding:28px 0;text-align:center;color:var(--muted);font-size:.88rem}
+  /* FEATURED pipeline */
+  .featured{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px;box-shadow:var(--shadow);margin-top:26px}
+  .pipeline{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0 6px}
+  .step{flex:1;min-width:170px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px}
+  .step .n{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
+  .step h4{margin:6px 0 4px;font-size:1rem}.step p{color:var(--text-2);font-size:.88rem}
+
+  .contact{text-align:center}.contact .btn{margin:6px}
+  footer{border-top:1px solid var(--border);padding:30px 0;text-align:center;color:var(--muted);font-size:.88rem}
 </style>
+<noscript><style>.reveal{opacity:1 !important;transform:none !important}</style></noscript>
 </head>
 <body>
 
@@ -108,21 +170,22 @@
     <div class="nav-links">
       <a href="#about">About</a>
       <a href="#skills">Skills</a>
-      <a href="#featured">Featured</a>
+      <a href="#dashboard">Dashboard</a>
       <a href="#projects">Projects</a>
       <a href="#contact">Contact</a>
+      <button class="themebtn" id="themeToggle" title="Toggle theme" aria-label="Toggle light/dark theme">🌗</button>
     </div>
   </div>
 </nav>
 
 <header class="hero">
   <div class="wrap">
-    <div class="avatar">MH</div>
-    <h1>MD Hasibur Rahman Murad</h1>
-    <div class="role">Business Intelligence&nbsp;/&nbsp;Data Analyst</div>
-    <p class="tagline">I turn raw data into decisions — using SQL, dimensional modeling, and dashboards across the full BI stack, from databases to enterprise reporting in SAP.</p>
-    <div class="cta">
-      <a class="btn primary" href="#projects">View Projects</a>
+    <div class="avatar reveal">MH</div>
+    <h1 class="reveal">MD Hasibur Rahman Murad</h1>
+    <div class="role reveal">Business Intelligence&nbsp;/&nbsp;Data Analyst</div>
+    <p class="tagline reveal">I turn raw data into decisions — designing data models, writing SQL, and building dashboards across the full BI stack, from databases to enterprise reporting in SAP. Scroll down for a <strong>live interactive dashboard</strong> built from my own analysis.</p>
+    <div class="cta reveal">
+      <a class="btn primary" href="#dashboard">Explore the Dashboard ↓</a>
       <a class="btn" href="https://www.linkedin.com/in/hasibur-rahman-murad" target="_blank" rel="noopener">LinkedIn ↗</a>
       <a class="btn" href="https://github.com/muradhasib01" target="_blank" rel="noopener">GitHub ↗</a>
       <a class="btn" href="mailto:muradhasib01@gmail.com">Email</a>
@@ -131,22 +194,22 @@
 </header>
 
 <section id="about">
-  <div class="wrap">
+  <div class="wrap reveal">
     <span class="section-tag">About</span>
     <h2>Turning data into decisions</h2>
-    <p class="lead" style="max-width:760px;font-size:1.05rem">
+    <p class="lead" style="max-width:780px;font-size:1.05rem">
       I'm an aspiring Business Intelligence and Data Analyst with hands-on experience across the entire analytics
       pipeline — designing star-schema data warehouses, writing SQL to answer business questions, and building
       dashboards in Tableau, SAS Visual Analytics, and SAP Business Warehouse. My work focuses on making data
-      <em>usable</em>: clean models, reproducible queries, and visuals that lead to a clear recommendation.
-      This portfolio was built through graduate BI coursework (MISY 5360, Lamar University) and extended into
-      reproducible projects.
+      <em>usable</em>: clean models, reproducible queries, and visuals that lead to a clear recommendation. This
+      portfolio grew out of graduate BI coursework (MISY 5360, Lamar University) and is extended with reproducible
+      SQL and the interactive dashboard below.
     </p>
   </div>
 </section>
 
-<section id="skills" style="background:color-mix(in srgb,var(--accent-soft) 35%,var(--bg))">
-  <div class="wrap">
+<section id="skills" style="background:color-mix(in srgb,var(--accent-soft) 30%,var(--bg))">
+  <div class="wrap reveal">
     <span class="section-tag">Skills</span>
     <h2>What I work with</h2>
     <p class="lead">A practical toolkit spanning querying, modeling, visualization, and enterprise BI.</p>
@@ -177,96 +240,119 @@
   </div>
 </section>
 
-<section id="featured">
-  <div class="wrap">
-    <span class="section-tag">Featured Project</span>
-    <h2>Coffee Chain — End-to-End BI</h2>
-    <p class="lead">One dataset carried through the whole pipeline — proving I can go from a raw model to a visual insight.</p>
-    <div class="featured">
-      <div class="pipeline">
-        <div class="step"><div class="n">01 · Model</div><h4>Star schema in Access</h4><p>Fact_Sales + Product, Store &amp; Budget dimensions.</p></div>
-        <div class="step"><div class="n">02 · Query</div><h4>SQL analysis</h4><p>Joins, CTEs &amp; window functions answering profit questions.</p></div>
-        <div class="step"><div class="n">03 · Visualize</div><h4>Tableau dashboards</h4><p>Profit by market, product mix, geographic sales.</p></div>
+<!-- ============ INTERACTIVE DASHBOARD ============ -->
+<section id="dashboard">
+  <div class="wrap reveal">
+    <span class="section-tag">Live Dashboard</span>
+    <h2>Coffee Chain — Sales Analytics</h2>
+    <p class="lead">Built from my own Tableau analysis (Sample&nbsp;–&nbsp;Coffee&nbsp;Chain), rebuilt here as a fully interactive
+      chart. <strong>Filter by market, toggle product types, and hover the bars.</strong> Total sales reconcile to $819,811 — matching the source workbook.</p>
+
+    <div class="grid kpis" style="margin-top:26px">
+      <div class="kpi"><div class="label">Total Sales</div><div class="val" data-count="819811" data-prefix="$">$0</div><div class="sub">across 4 markets</div></div>
+      <div class="kpi"><div class="label">Top Market</div><div class="val">West</div><div class="sub"><span data-count="272264" data-prefix="$">$0</span> in sales</div></div>
+      <div class="kpi"><div class="label">Top Product Type</div><div class="val">Espresso</div><div class="sub"><span data-count="222996" data-prefix="$">$0</span> in sales</div></div>
+      <div class="kpi"><div class="label">Product × Market grid</div><div class="val">4 × 4</div><div class="sub">15 active segments</div></div>
+    </div>
+
+    <div class="dash">
+      <div class="dash-head">
+        <div>
+          <h3>Sales by Market &amp; Product Type</h3>
+          <p>SUM of Sales (USD). Click a market to focus; click a legend item to toggle a product type.</p>
+        </div>
+        <button class="btn" id="tableToggle" style="padding:8px 14px;font-size:.85rem">Table view</button>
       </div>
-      <p style="color:var(--muted);margin-top:10px">
-        <strong>Business questions answered:</strong> Which product types drive profit in each market? Which products
-        <em>lose</em> money? How does each market contribute to total sales?
-      </p>
-      <div class="links" style="display:flex;gap:16px;margin-top:14px;font-weight:650">
-        <a href="https://github.com/muradhasib01/business-intelligence-portfolio/blob/main/03-ms-access/coffee-chain-analytics-queries.sql" target="_blank" rel="noopener">View the SQL ↗</a>
-        <a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/05-tableau" target="_blank" rel="noopener">See the dashboards ↗</a>
+
+      <div class="controls" id="marketControls">
+        <span class="ctl-label">Market</span>
+        <button class="chip active" data-market="All">All</button>
+        <button class="chip" data-market="Central">Central</button>
+        <button class="chip" data-market="East">East</button>
+        <button class="chip" data-market="South">South</button>
+        <button class="chip" data-market="West">West</button>
+      </div>
+
+      <div class="legend" id="legend"></div>
+
+      <div class="chart-holder">
+        <svg class="chart" id="chart" viewBox="0 0 760 430" role="img" aria-label="Grouped bar chart of Coffee Chain sales by market and product type"></svg>
+        <div class="tip" id="tip"></div>
+      </div>
+
+      <div id="tableWrap" class="hidden"></div>
+
+      <div class="insight">
+        <b>Insight:</b> The <b>West</b> market leads on total sales ($272,264), driven by strong Herbal&nbsp;Tea and Tea sales,
+        while <b>South</b> lags ($103,926) and carries no Tea sales at all — a clear expansion opportunity.
       </div>
     </div>
   </div>
 </section>
 
-<section id="projects" style="background:color-mix(in srgb,var(--accent-soft) 35%,var(--bg))">
-  <div class="wrap">
+<!-- FEATURED -->
+<section id="featured" style="background:color-mix(in srgb,var(--accent-soft) 30%,var(--bg))">
+  <div class="wrap reveal">
+    <span class="section-tag">How it was built</span>
+    <h2>End-to-End BI Pipeline</h2>
+    <p class="lead">The dashboard above is the last step of a full pipeline — from raw model to visual insight.</p>
+    <div class="featured">
+      <div class="pipeline">
+        <div class="step"><div class="n">01 · Model</div><h4>Star schema in Access</h4><p>Fact_Sales + Product, Store &amp; Budget dimensions.</p></div>
+        <div class="step"><div class="n">02 · Query</div><h4>SQL analysis</h4><p>Joins, CTEs &amp; window functions answering profit questions.</p></div>
+        <div class="step"><div class="n">03 · Visualize</div><h4>Tableau &amp; this dashboard</h4><p>Profit by market, product mix, geographic sales.</p></div>
+      </div>
+      <div class="links" style="display:flex;gap:16px;margin-top:14px;font-weight:650;flex-wrap:wrap">
+        <a href="https://github.com/muradhasib01/business-intelligence-portfolio/blob/main/03-ms-access/coffee-chain-analytics-queries.sql" target="_blank" rel="noopener">View the SQL ↗</a>
+        <a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/05-tableau" target="_blank" rel="noopener">See the Tableau deliverables ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="wrap reveal">
     <span class="section-tag">Projects</span>
     <h2>Selected work</h2>
     <p class="lead">Each project frames a business question. Deliverables are browsable in the repository.</p>
     <div class="grid projects-grid">
-
       <article class="proj">
-        <div class="thumb"><img src="assets/tableau-sales-by-state-map.png" alt="Tableau geographic sales map"></div>
-        <div class="body">
-          <span class="kicker">Tableau</span>
-          <h3>Sales Geography &amp; Market Mix</h3>
+        <div class="thumb"><img src="assets/tableau-sales-by-state-map.png" alt="Tableau geographic sales map" loading="lazy"></div>
+        <div class="body"><span class="kicker">Tableau</span><h3>Sales Geography &amp; Market Mix</h3>
           <p>Interactive maps and cross-tab charts: where and what the business should sell more of, by state, region, and product type.</p>
-          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/05-tableau" target="_blank" rel="noopener">View ↗</a></div>
-        </div>
+          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/05-tableau" target="_blank" rel="noopener">View ↗</a></div></div>
       </article>
-
       <article class="proj">
-        <div class="thumb"><img src="assets/sas-salary-boxplot-dashboard.png" alt="SAS Visual Analytics box plot dashboard"></div>
-        <div class="body">
-          <span class="kicker">SAS Visual Analytics</span>
-          <h3>Distribution &amp; Profitability</h3>
+        <div class="thumb"><img src="assets/sas-salary-boxplot-dashboard.png" alt="SAS Visual Analytics box plot dashboard" loading="lazy"></div>
+        <div class="body"><span class="kicker">SAS Visual Analytics</span><h3>Distribution &amp; Profitability</h3>
           <p>Box-plot distributions of pay, category-vs-measure classification, and cross-country profitability analysis.</p>
-          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/04-sas" target="_blank" rel="noopener">View ↗</a></div>
-        </div>
+          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/04-sas" target="_blank" rel="noopener">View ↗</a></div></div>
       </article>
-
       <article class="proj">
-        <div class="thumb"><img src="assets/sap-bw-revenue-by-product.png" alt="SAP BW revenue analysis"></div>
-        <div class="body">
-          <span class="kicker">SAP Business Warehouse</span>
-          <h3>Enterprise Revenue Reporting</h3>
+        <div class="thumb"><img src="assets/sap-bw-revenue-by-product.png" alt="SAP BW revenue analysis" loading="lazy"></div>
+        <div class="body"><span class="kicker">SAP Business Warehouse</span><h3>Enterprise Revenue Reporting</h3>
           <p>Revenue reporting at scale on Global Bike Inc. — InfoObjects, Key Figures, exception aggregation, and DataSource design.</p>
-          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/07-sap-bw" target="_blank" rel="noopener">View ↗</a></div>
-        </div>
+          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/07-sap-bw" target="_blank" rel="noopener">View ↗</a></div></div>
       </article>
-
       <article class="proj">
         <div class="thumb noimg">🗄️</div>
-        <div class="body">
-          <span class="kicker">SQL &amp; Data Modeling</span>
-          <h3>Coffee Chain Data Warehouse</h3>
-          <p>Star-schema DDL plus an analytical query library — joins, CTEs, ranking, running totals, and margin logic.</p>
-          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/03-ms-access" target="_blank" rel="noopener">View SQL ↗</a></div>
-        </div>
+        <div class="body"><span class="kicker">SQL &amp; Data Modeling</span><h3>Coffee Chain Data Warehouse</h3>
+          <p>Star-schema DDL plus an analytical query library — joins, CTEs, ranking, running totals, and margin logic. (Powers the dashboard above.)</p>
+          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/03-ms-access" target="_blank" rel="noopener">View SQL ↗</a></div></div>
       </article>
-
       <article class="proj">
         <div class="thumb noimg">📊</div>
-        <div class="body">
-          <span class="kicker">Analysis · Excel</span>
-          <h3>Product &amp; Sales Analysis</h3>
+        <div class="body"><span class="kicker">Analysis · Excel</span><h3>Product &amp; Sales Analysis</h3>
           <p>Identifying underperforming product lines, loss-making products, and top cities by orders and profit.</p>
-          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/02-data-analysis" target="_blank" rel="noopener">View ↗</a></div>
-        </div>
+          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/02-data-analysis" target="_blank" rel="noopener">View ↗</a></div></div>
       </article>
-
       <article class="proj">
         <div class="thumb noimg">🧠</div>
-        <div class="body">
-          <span class="kicker">BI Foundations</span>
-          <h3>OLTP vs. OLAP</h3>
+        <div class="body"><span class="kicker">BI Foundations</span><h3>OLTP vs. OLAP</h3>
           <p>Why a manager can't decide from a transaction report — and how an analytical (OLAP) view fixes it.</p>
-          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/01-oltp-olap" target="_blank" rel="noopener">View ↗</a></div>
-        </div>
+          <div class="links"><a href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/01-oltp-olap" target="_blank" rel="noopener">View ↗</a></div></div>
       </article>
-
     </div>
     <p style="text-align:center;margin-top:34px">
       <a class="btn" href="https://github.com/muradhasib01/business-intelligence-portfolio" target="_blank" rel="noopener">Browse the full portfolio repository ↗</a>
@@ -274,8 +360,8 @@
   </div>
 </section>
 
-<section id="contact" class="contact">
-  <div class="wrap">
+<section id="contact" class="contact" style="background:color-mix(in srgb,var(--accent-soft) 30%,var(--bg))">
+  <div class="wrap reveal">
     <span class="section-tag">Contact</span>
     <h2>Let's connect</h2>
     <p class="lead" style="margin:6px auto 22px">Open to entry-level Business Intelligence / Data Analyst opportunities.</p>
@@ -285,9 +371,163 @@
   </div>
 </section>
 
-<footer>
-  <div class="wrap">© <span id="yr">2026</span> MD Hasibur Rahman Murad · Built with GitHub Pages</div>
-</footer>
+<footer><div class="wrap">© <span id="yr"></span> MD Hasibur Rahman Murad · Built with vanilla JS + GitHub Pages</div></footer>
 
+<script>
+/* ---------- theme toggle ---------- */
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeToggle');
+  var saved=null; try{saved=localStorage.getItem('theme')}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme');
+    var next = cur==='dark' ? 'light' : (cur==='light' ? 'dark' :
+      (matchMedia('(prefers-color-scheme: dark)').matches ? 'light':'dark'));
+    root.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next)}catch(e){}
+    if(window.__renderChart) window.__renderChart();
+  });
+})();
+
+/* ---------- reveal on scroll ---------- */
+(function(){
+  var els=[].slice.call(document.querySelectorAll('.reveal'));
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}})},{threshold:.12});
+  els.forEach(function(e){io.observe(e)});
+  /* failsafe: never leave content hidden if the observer stalls */
+  window.addEventListener('load',function(){setTimeout(function(){els.forEach(function(e){e.classList.add('in')});},1800);});
+})();
+
+/* ---------- count-up ---------- */
+(function(){
+  var done=new WeakSet();
+  function run(el){
+    if(done.has(el))return; done.add(el);
+    var target=+el.getAttribute('data-count'), pre=el.getAttribute('data-prefix')||'', t0=null, dur=1300;
+    function tick(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/dur,1); var e=1-Math.pow(1-p,3);
+      el.textContent=pre+Math.round(target*e).toLocaleString('en-US'); if(p<1)requestAnimationFrame(tick); }
+    requestAnimationFrame(tick);
+  }
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting)run(x.target)})},{threshold:.4});
+  [].slice.call(document.querySelectorAll('[data-count]')).forEach(function(e){io.observe(e)});
+})();
+document.getElementById('yr').textContent='2026';
+
+/* ---------- interactive chart ---------- */
+(function(){
+  var MARKETS=['Central','East','South','West'];
+  var PRODUCTS=['Coffee','Espresso','Herbal Tea','Tea'];
+  var SALES={
+    Central:{Coffee:69080,Espresso:59701,'Herbal Tea':67888,Tea:68376},
+    East:{Coffee:56641,Espresso:48397,'Herbal Tea':41361,Tea:32177},
+    South:{Coffee:33259,Espresso:44990,'Herbal Tea':25677,Tea:0},
+    West:{Coffee:57848,Espresso:69908,'Herbal Tea':72288,Tea:72220}
+  };
+  var SW=['--s1','--s2','--s3','--s4'];
+  function col(i){return getComputedStyle(document.documentElement).getPropertyValue(SW[i]).trim();}
+  var svg=document.getElementById('chart'), tip=document.getElementById('tip');
+  var state={market:'All', off:{}};
+  var NS='http://www.w3.org/2000/svg';
+  function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+  function usd(v){return '$'+v.toLocaleString('en-US');}
+  function shownMarkets(){return state.market==='All'?MARKETS:[state.market];}
+  function shownProducts(){return PRODUCTS.filter(function(p){return !state.off[p];});}
+
+  function render(){
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    var W=760,H=430,mL=54,mR=16,mT=18,mB=42;
+    var x0=mL,x1=W-mR,y0=mT,y1=H-mB, plotW=x1-x0, plotH=y1-y0;
+    var yMax=80000;
+    var Ms=shownMarkets(), Ps=shownProducts();
+    // y grid + ticks
+    for(var t=0;t<=yMax;t+=20000){
+      var gy=y1-(t/yMax)*plotH;
+      svg.appendChild(el('line',{class:'gridline',x1:x0,y1:gy,x2:x1,y2:gy}));
+      var g=el('g',{class:'tick'}); var tx=el('text',{x:x0-8,y:gy+4,'text-anchor':'end'});
+      tx.textContent=t===0?'0':'$'+(t/1000)+'k'; g.appendChild(tx); svg.appendChild(g);
+    }
+    svg.appendChild(el('line',{class:'baseline',x1:x0,y1:y1,x2:x1,y2:y1}));
+    var gW=plotW/Ms.length, innerPad=gW*0.16, barsArea=gW-2*innerPad;
+    var p=Ps.length, gap=Math.min(5,barsArea*0.06);
+    var bW=p>0?(barsArea-(p-1)*gap)/p:0;
+    Ms.forEach(function(mk,mi){
+      var gx=x0+mi*gW;
+      Ps.forEach(function(pr,pi){
+        var v=SALES[mk][pr]||0;
+        var h=(v/yMax)*plotH, bx=gx+innerPad+pi*(bW+gap), by=y1-h;
+        var ci=PRODUCTS.indexOf(pr);
+        if(v>0){
+          var r=el('rect',{class:'bar',x:bx.toFixed(1),y:by.toFixed(1),width:bW.toFixed(1),height:h.toFixed(1),
+            rx:Math.min(4,bW/3).toFixed(1),fill:col(ci)});
+          r.addEventListener('mousemove',function(ev){showTip(ev,mk,pr,v);});
+          r.addEventListener('mouseleave',hideTip);
+          svg.appendChild(r);
+          // direct label (relief rule)
+          if(bW>=16){var lb=el('text',{class:'barlab',x:(bx+bW/2).toFixed(1),y:(by-4).toFixed(1)});
+            lb.textContent='$'+Math.round(v/1000)+'k'; svg.appendChild(lb);}
+        }
+      });
+      var xl=el('text',{class:'xlab',x:(gx+gW/2).toFixed(1),y:y1+24}); xl.textContent=mk; svg.appendChild(xl);
+    });
+  }
+  function showTip(ev,mk,pr,v){
+    var total=819811;
+    tip.innerHTML='<b>'+mk+'</b> · '+pr+'<br><span class="tt-metric">'+usd(v)+'</span> &nbsp;('+(v/total*100).toFixed(1)+'% of total)';
+    var box=svg.getBoundingClientRect(), holder=svg.parentElement.getBoundingClientRect();
+    tip.style.left=(ev.clientX-holder.left)+'px';
+    tip.style.top=(ev.clientY-holder.top)+'px';
+    tip.style.opacity='1';
+  }
+  function hideTip(){tip.style.opacity='0';}
+
+  /* legend */
+  var legend=document.getElementById('legend');
+  function buildLegend(){
+    legend.innerHTML='';
+    PRODUCTS.forEach(function(pr,i){
+      var d=document.createElement('span'); d.className='lg'+(state.off[pr]?' off':'');
+      d.innerHTML='<span class="sw" style="background:'+col(i)+'"></span>'+pr;
+      d.addEventListener('click',function(){
+        // don't allow turning everything off
+        if(!state.off[pr] && shownProducts().length===1) return;
+        state.off[pr]=!state.off[pr]; buildLegend(); render();
+      });
+      legend.appendChild(d);
+    });
+  }
+  /* market chips */
+  document.getElementById('marketControls').addEventListener('click',function(e){
+    var b=e.target.closest('.chip'); if(!b)return;
+    [].slice.call(this.querySelectorAll('.chip')).forEach(function(c){c.classList.remove('active')});
+    b.classList.add('active'); state.market=b.getAttribute('data-market'); render();
+  });
+  /* table view */
+  var tableWrap=document.getElementById('tableWrap'), tableBtn=document.getElementById('tableToggle'), tableOn=false;
+  function buildTable(){
+    var rows=''; var colTot={Coffee:0,Espresso:0,'Herbal Tea':0,Tea:0}, grand=0;
+    MARKETS.forEach(function(mk){
+      var cells='', rt=0;
+      PRODUCTS.forEach(function(pr){var v=SALES[mk][pr]||0; rt+=v; colTot[pr]+=v; cells+='<td>'+(v?usd(v):'—')+'</td>';});
+      grand+=rt; rows+='<tr><td>'+mk+'</td>'+cells+'<td>'+usd(rt)+'</td></tr>';
+    });
+    var foot='<td>Total</td>'; PRODUCTS.forEach(function(pr){foot+='<td>'+usd(colTot[pr])+'</td>';}); foot+='<td>'+usd(grand)+'</td>';
+    tableWrap.innerHTML='<table class="dtable"><thead><tr><th>Market</th><th>Coffee</th><th>Espresso</th><th>Herbal Tea</th><th>Tea</th><th>Total</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr>'+foot+'</tr></tfoot></table>';
+  }
+  tableBtn.addEventListener('click',function(){
+    tableOn=!tableOn;
+    document.querySelector('.chart-holder').classList.toggle('hidden',tableOn);
+    document.getElementById('legend').classList.toggle('hidden',tableOn);
+    document.getElementById('marketControls').classList.toggle('hidden',tableOn);
+    tableWrap.classList.toggle('hidden',!tableOn);
+    tableBtn.textContent=tableOn?'Chart view':'Table view';
+    if(tableOn)buildTable();
+  });
+
+  window.__renderChart=function(){buildLegend();render();};
+  buildLegend(); render(); buildTable();
+  window.addEventListener('resize',function(){/* svg scales via viewBox; tip recalcs on hover */});
+})();
+</script>
 </body>
 </html>
