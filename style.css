@@ -242,3 +242,14 @@ footer a{color:var(--text-2);font-weight:600}
 .spot:hover::after{opacity:1}
 .btn.primary{will-change:transform;transition:transform .2s cubic-bezier(.2,.8,.2,1),filter .2s,box-shadow .2s}
 @media (prefers-reduced-motion:reduce){.tilt,.btn.primary{transition:none}.cred-photo{transition:none}}
+
+/* interactive hero background */
+#fx{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.hero-grid{position:relative;z-index:1}
+/* button + skill icons */
+.btn svg{flex:none} .btn:hover svg{transform:none}
+.status svg{flex:none}
+.ico svg{display:block}
+a.btn[href*="linkedin"]:hover{color:#0a66c2;border-color:#0a66c2}
+a.btn[href*="github"]:hover{color:var(--text);border-color:var(--text-2)}
+.contact-card a.btn[href*="linkedin"]:hover,.contact-card a.btn[href*="github"]:hover{color:#fff;border-color:#fff}
