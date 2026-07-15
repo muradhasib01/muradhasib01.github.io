@@ -1,0 +1,5 @@
+# local screenshot/preview scratch files
+_*
+*.tmp
+Thumbs.db
+.DS_Store
