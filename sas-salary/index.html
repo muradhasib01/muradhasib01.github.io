@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAS Salary Dashboard — MD Hasibur Rahman Murad</title>
+<meta name="description" content="Interactive SAS Visual Analytics salary-by-job-title dashboard with box-plot statistics, built by MD Hasibur Rahman Murad.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav><div class="nav-inner">
+  <a class="brand" href="../index.html">Hasibur&nbsp;Rahman&nbsp;Murad</a>
+  <div class="nav-links">
+    <a href="../index.html#dashboards">All Dashboards</a>
+    <a href="../index.html#projects">Projects</a>
+    <button class="themebtn" id="themeToggle" aria-label="Toggle theme">🌗</button>
+  </div>
+</div></nav>
+
+<div class="wrap dpage-top">
+  <a class="backlink" href="../index.html#dashboards">← Back to all dashboards</a>
+  <div class="dpage-title reveal">
+    <div class="role">Live Dashboard · SAS rebuild</div>
+    <h1>SAS — Salary Analysis by Job Title</h1>
+    <p class="lead">From my SAS Visual Analytics box-plot analysis of employee compensation, rebuilt as an interactive chart.
+      <strong>Switch between average salary and headcount, and hover for the full distribution</strong> (min, median, max, spread).</p>
+  </div>
+</div>
+
+<section style="padding-top:26px">
+  <div class="wrap reveal">
+    <div class="grid kpis">
+      <div class="kpi"><div class="label">Total Employees</div><div class="val" data-count="647">0</div><div class="sub">across 8 job titles</div></div>
+      <div class="kpi"><div class="label">Highest Avg Salary</div><div class="val" data-count="35070" data-prefix="$">$0</div><div class="sub">Purchasing Agent III</div></div>
+      <div class="kpi"><div class="label">Largest Role</div><div class="val">Sales Rep. I</div><div class="sub"><span data-count="215">0</span> employees</div></div>
+      <div class="kpi"><div class="label">Overall Avg Salary</div><div class="val" data-count="27596" data-prefix="$">$0</div><div class="sub">weighted across roles</div></div>
+    </div>
+
+    <div class="dash">
+      <div class="dash-head">
+        <div><h3>Compensation by Job Title</h3><p>Hover a bar for the full box-plot statistics (min, quartiles, median, max, count).</p></div>
+        <button class="btn" id="tableToggle" style="padding:8px 14px;font-size:.85rem">Table view</button>
+      </div>
+      <div class="controls" id="metricControls">
+        <span class="ctl-label">Metric</span>
+        <button class="chip active" data-metric="avg">Average Salary</button>
+        <button class="chip" data-metric="count">Headcount</button>
+      </div>
+      <div class="chart-holder">
+        <svg class="chart" id="chart" viewBox="0 0 760 440" role="img" aria-label="Bar chart of salary by job title"></svg>
+        <div class="tip" id="tip"></div>
+      </div>
+      <div id="tableWrap" class="hidden"></div>
+      <div class="insight"><b>Insight:</b> Pay rises with seniority — Sales Rep. IV averages <b>$31,881</b> vs. <b>$25,261</b> for Trainees — but the
+        workforce is bottom-heavy: entry-level <b>Sales Rep. I</b> (215) and II (172) make up nearly 60% of headcount.</div>
+    </div>
+    <p style="margin-top:22px"><a class="btn" href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/04-sas" target="_blank" rel="noopener">See the original SAS deliverables ↗</a></p>
+  </div>
+</section>
+
+<footer><div class="wrap">© <span id="yr"></span> MD Hasibur Rahman Murad · <a href="../index.html">Back to portfolio</a></div></footer>
+
+<script src="../common.js"></script>
+<script>
+(function(){
+  // title, min, q1, median, q3, max, avg, std, count
+  var DATA=[
+    ['Purchasing Agent III',34270,34270,35070,35870,35870,35070,1131.37,2],
+    ['Sales Rep. IV',30150,30890,31605,32210,40755,31880.51,1857.47,49],
+    ['Purchasing Agent I',31760,31760,31760,31760,31760,31760,0,1],
+    ['Sales Rep. III',25005,28525,29500,30070,37320,29457.35,1485.59,113],
+    ['Sales Rep. II',26015,26600,27325,28005,35990,27373.58,1091.61,172],
+    ['Sales Rep. I',20835,25795,26495,26980,33925,26417.79,1253.06,215],
+    ['Temp. Sales Rep.',21580,25735,26407.50,26910,28885,26317.43,963.55,70],
+    ['Trainee',21615,24515,25405,25580,30945,25260.80,1542.18,25]
+  ].sort(function(a,b){return b[6]-a[6];});
+  var svg=document.getElementById('chart'), tip=document.getElementById('tip'), NS='http://www.w3.org/2000/svg';
+  function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+  function accent(){return getComputedStyle(document.documentElement).getPropertyValue('--s1').trim();}
+  function money(v){return '$'+Math.round(v).toLocaleString('en-US');}
+  var state={metric:'avg'};
+  function render(){
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    var W=760,H=440,mL=56,mR=16,mT=18,mB=64,x0=mL,x1=W-mR,y0=mT,y1=H-mB,plotW=x1-x0,plotH=y1-y0,c=accent();
+    var isAvg=state.metric==='avg', yMax=isAvg?40000:250, step=isAvg?10000:50;
+    for(var t=0;t<=yMax;t+=step){var gy=y1-(t/yMax)*plotH;svg.appendChild(el('line',{class:'gridline',x1:x0,y1:gy,x2:x1,y2:gy}));
+      var g=el('g',{class:'tick'});var tx=el('text',{x:x0-8,y:gy+4,'text-anchor':'end'});tx.textContent=isAvg?(t===0?'0':'$'+(t/1000)+'k'):(''+t);g.appendChild(tx);svg.appendChild(g);}
+    svg.appendChild(el('line',{class:'baseline',x1:x0,y1:y1,x2:x1,y2:y1}));
+    var n=DATA.length,band=plotW/n,pad=band*0.22,bW=band-2*pad;
+    DATA.forEach(function(d,i){
+      var val=isAvg?d[6]:d[8],h=(val/yMax)*plotH,bx=x0+i*band+pad,by=y1-h;
+      var r=el('rect',{class:'bar',x:bx.toFixed(1),y:by.toFixed(1),width:bW.toFixed(1),height:h.toFixed(1),rx:4,fill:c});
+      r.addEventListener('mousemove',function(ev){showTip(ev,d);});r.addEventListener('mouseleave',hideTip);svg.appendChild(r);
+      var vl=el('text',{class:'barlab',x:(bx+bW/2).toFixed(1),y:(by-5).toFixed(1)});vl.textContent=isAvg?'$'+Math.round(d[6]/1000)+'k':(''+d[8]);svg.appendChild(vl);
+      // 2-line label
+      var words=d[0].split(' '), l1=words[0], l2=words.slice(1).join(' ');
+      var cx=bx+bW/2;
+      var t1=el('text',{class:'xlab',x:cx.toFixed(1),y:y1+20});t1.textContent=l1;svg.appendChild(t1);
+      if(l2){var t2=el('text',{class:'xlab',x:cx.toFixed(1),y:y1+35});t2.textContent=l2;svg.appendChild(t2);}
+    });
+  }
+  function showTip(ev,d){
+    tip.innerHTML='<b>'+d[0]+'</b> <span style="opacity:.6">n='+d[8]+'</span><br>'+
+      'Avg <span class="tt-metric">'+money(d[6])+'</span> · Median '+money(d[3])+'<br>'+
+      'Range '+money(d[1])+'–'+money(d[5])+' · SD $'+Math.round(d[7]).toLocaleString('en-US');
+    var holder=svg.parentElement.getBoundingClientRect();tip.style.left=(ev.clientX-holder.left)+'px';tip.style.top=(ev.clientY-holder.top)+'px';tip.style.opacity='1';}
+  function hideTip(){tip.style.opacity='0';}
+  document.getElementById('metricControls').addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;
+    [].slice.call(this.querySelectorAll('.chip')).forEach(function(c){c.classList.remove('active')});b.classList.add('active');state.metric=b.getAttribute('data-metric');render();});
+  var tableWrap=document.getElementById('tableWrap'),tableBtn=document.getElementById('tableToggle'),tableOn=false;
+  function buildTable(){var rows='';DATA.forEach(function(d){rows+='<tr><td>'+d[0]+'</td><td>'+money(d[6])+'</td><td>'+money(d[3])+'</td><td>'+money(d[1])+'</td><td>'+money(d[5])+'</td><td>'+d[8]+'</td></tr>';});
+    tableWrap.innerHTML='<table class="dtable"><thead><tr><th>Job Title</th><th>Avg</th><th>Median</th><th>Min</th><th>Max</th><th>Count</th></tr></thead><tbody>'+rows+'</tbody></table>';}
+  tableBtn.addEventListener('click',function(){tableOn=!tableOn;
+    document.querySelector('.chart-holder').classList.toggle('hidden',tableOn);document.getElementById('metricControls').classList.toggle('hidden',tableOn);
+    tableWrap.classList.toggle('hidden',!tableOn);tableBtn.textContent=tableOn?'Chart view':'Table view';if(tableOn)buildTable();});
+  window.__redraw=render; render(); buildTable();
+})();
+</script>
+</body>
+</html>

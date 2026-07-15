@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coffee Chain Sales Dashboard — MD Hasibur Rahman Murad</title>
+<meta name="description" content="Interactive Coffee Chain sales dashboard — sales by market and product type, built from a Tableau analysis by MD Hasibur Rahman Murad.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav><div class="nav-inner">
+  <a class="brand" href="../index.html">Hasibur&nbsp;Rahman&nbsp;Murad</a>
+  <div class="nav-links">
+    <a href="../index.html#dashboards">All Dashboards</a>
+    <a href="../index.html#projects">Projects</a>
+    <button class="themebtn" id="themeToggle" aria-label="Toggle theme">🌗</button>
+  </div>
+</div></nav>
+
+<div class="wrap dpage-top">
+  <a class="backlink" href="../index.html#dashboards">← Back to all dashboards</a>
+  <div class="dpage-title reveal">
+    <div class="role">Live Dashboard · Tableau rebuild</div>
+    <h1>Coffee Chain — Sales Analytics</h1>
+    <p class="lead">Built from my Tableau analysis of the Sample&nbsp;–&nbsp;Coffee&nbsp;Chain dataset, rebuilt here as a fully interactive
+      chart. <strong>Filter by market, toggle product types, and hover the bars.</strong> Totals reconcile to $819,811 — matching the source workbook.</p>
+  </div>
+</div>
+
+<section style="padding-top:26px">
+  <div class="wrap reveal">
+    <div class="grid kpis">
+      <div class="kpi"><div class="label">Total Sales</div><div class="val" data-count="819811" data-prefix="$">$0</div><div class="sub">across 4 markets</div></div>
+      <div class="kpi"><div class="label">Top Market</div><div class="val">West</div><div class="sub"><span data-count="272264" data-prefix="$">$0</span> in sales</div></div>
+      <div class="kpi"><div class="label">Top Product Type</div><div class="val">Espresso</div><div class="sub"><span data-count="222996" data-prefix="$">$0</span> in sales</div></div>
+      <div class="kpi"><div class="label">Product × Market</div><div class="val">4 &times; 4</div><div class="sub">15 active segments</div></div>
+    </div>
+
+    <div class="dash">
+      <div class="dash-head">
+        <div><h3>Sales by Market &amp; Product Type</h3><p>SUM of Sales (USD). Click a market to focus; click a legend item to toggle a product type.</p></div>
+        <button class="btn" id="tableToggle" style="padding:8px 14px;font-size:.85rem">Table view</button>
+      </div>
+      <div class="controls" id="marketControls">
+        <span class="ctl-label">Market</span>
+        <button class="chip active" data-market="All">All</button>
+        <button class="chip" data-market="Central">Central</button>
+        <button class="chip" data-market="East">East</button>
+        <button class="chip" data-market="South">South</button>
+        <button class="chip" data-market="West">West</button>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div class="chart-holder">
+        <svg class="chart" id="chart" viewBox="0 0 760 430" role="img" aria-label="Grouped bar chart of Coffee Chain sales by market and product type"></svg>
+        <div class="tip" id="tip"></div>
+      </div>
+      <div id="tableWrap" class="hidden"></div>
+      <div class="insight"><b>Insight:</b> The <b>West</b> market leads on total sales ($272,264), driven by strong Herbal&nbsp;Tea and Tea sales,
+        while <b>South</b> lags ($103,926) and carries no Tea sales at all — a clear expansion opportunity.</div>
+    </div>
+    <p style="margin-top:22px"><a class="btn" href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/05-tableau" target="_blank" rel="noopener">See the original Tableau deliverable ↗</a>
+      <a class="btn" href="https://github.com/muradhasib01/business-intelligence-portfolio/blob/main/03-ms-access/coffee-chain-analytics-queries.sql" target="_blank" rel="noopener">View the SQL ↗</a></p>
+  </div>
+</section>
+
+<footer><div class="wrap">© <span id="yr"></span> MD Hasibur Rahman Murad · <a href="../index.html">Back to portfolio</a></div></footer>
+
+<script src="../common.js"></script>
+<script>
+(function(){
+  var MARKETS=['Central','East','South','West'], PRODUCTS=['Coffee','Espresso','Herbal Tea','Tea'];
+  var SALES={
+    Central:{Coffee:69080,Espresso:59701,'Herbal Tea':67888,Tea:68376},
+    East:{Coffee:56641,Espresso:48397,'Herbal Tea':41361,Tea:32177},
+    South:{Coffee:33259,Espresso:44990,'Herbal Tea':25677,Tea:0},
+    West:{Coffee:57848,Espresso:69908,'Herbal Tea':72288,Tea:72220}
+  };
+  var SW=['--s1','--s2','--s3','--s4'];
+  function col(i){return getComputedStyle(document.documentElement).getPropertyValue(SW[i]).trim();}
+  var svg=document.getElementById('chart'), tip=document.getElementById('tip');
+  var state={market:'All',off:{}}, NS='http://www.w3.org/2000/svg';
+  function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+  function usd(v){return '$'+v.toLocaleString('en-US');}
+  function shownMarkets(){return state.market==='All'?MARKETS:[state.market];}
+  function shownProducts(){return PRODUCTS.filter(function(p){return !state.off[p];});}
+  function render(){
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    var W=760,H=430,mL=54,mR=16,mT=18,mB=42,x0=mL,x1=W-mR,y0=mT,y1=H-mB,plotW=x1-x0,plotH=y1-y0,yMax=80000;
+    var Ms=shownMarkets(),Ps=shownProducts();
+    for(var t=0;t<=yMax;t+=20000){var gy=y1-(t/yMax)*plotH;svg.appendChild(el('line',{class:'gridline',x1:x0,y1:gy,x2:x1,y2:gy}));
+      var g=el('g',{class:'tick'});var tx=el('text',{x:x0-8,y:gy+4,'text-anchor':'end'});tx.textContent=t===0?'0':'$'+(t/1000)+'k';g.appendChild(tx);svg.appendChild(g);}
+    svg.appendChild(el('line',{class:'baseline',x1:x0,y1:y1,x2:x1,y2:y1}));
+    var gW=plotW/Ms.length,innerPad=gW*0.16,barsArea=gW-2*innerPad,p=Ps.length,gap=Math.min(5,barsArea*0.06),bW=p>0?(barsArea-(p-1)*gap)/p:0;
+    Ms.forEach(function(mk,mi){var gx=x0+mi*gW;
+      Ps.forEach(function(pr,pi){var v=SALES[mk][pr]||0,h=(v/yMax)*plotH,bx=gx+innerPad+pi*(bW+gap),by=y1-h,ci=PRODUCTS.indexOf(pr);
+        if(v>0){var r=el('rect',{class:'bar',x:bx.toFixed(1),y:by.toFixed(1),width:bW.toFixed(1),height:h.toFixed(1),rx:Math.min(4,bW/3).toFixed(1),fill:col(ci)});
+          r.addEventListener('mousemove',function(ev){showTip(ev,mk,pr,v);});r.addEventListener('mouseleave',hideTip);svg.appendChild(r);
+          if(bW>=16){var lb=el('text',{class:'barlab',x:(bx+bW/2).toFixed(1),y:(by-4).toFixed(1)});lb.textContent='$'+Math.round(v/1000)+'k';svg.appendChild(lb);}}});
+      var xl=el('text',{class:'xlab',x:(gx+gW/2).toFixed(1),y:y1+24});xl.textContent=mk;svg.appendChild(xl);});
+  }
+  function showTip(ev,mk,pr,v){var total=819811;
+    tip.innerHTML='<b>'+mk+'</b> · '+pr+'<br><span class="tt-metric">'+usd(v)+'</span> &nbsp;('+(v/total*100).toFixed(1)+'% of total)';
+    var holder=svg.parentElement.getBoundingClientRect();tip.style.left=(ev.clientX-holder.left)+'px';tip.style.top=(ev.clientY-holder.top)+'px';tip.style.opacity='1';}
+  function hideTip(){tip.style.opacity='0';}
+  var legend=document.getElementById('legend');
+  function buildLegend(){legend.innerHTML='';PRODUCTS.forEach(function(pr,i){var d=document.createElement('span');d.className='lg'+(state.off[pr]?' off':'');
+    d.innerHTML='<span class="sw" style="background:'+col(i)+'"></span>'+pr;
+    d.addEventListener('click',function(){if(!state.off[pr]&&shownProducts().length===1)return;state.off[pr]=!state.off[pr];buildLegend();render();});legend.appendChild(d);});}
+  document.getElementById('marketControls').addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;
+    [].slice.call(this.querySelectorAll('.chip')).forEach(function(c){c.classList.remove('active')});b.classList.add('active');state.market=b.getAttribute('data-market');render();});
+  var tableWrap=document.getElementById('tableWrap'),tableBtn=document.getElementById('tableToggle'),tableOn=false;
+  function buildTable(){var rows='',colTot={Coffee:0,Espresso:0,'Herbal Tea':0,Tea:0},grand=0;
+    MARKETS.forEach(function(mk){var cells='',rt=0;PRODUCTS.forEach(function(pr){var v=SALES[mk][pr]||0;rt+=v;colTot[pr]+=v;cells+='<td>'+(v?usd(v):'—')+'</td>';});grand+=rt;rows+='<tr><td>'+mk+'</td>'+cells+'<td>'+usd(rt)+'</td></tr>';});
+    var foot='<td>Total</td>';PRODUCTS.forEach(function(pr){foot+='<td>'+usd(colTot[pr])+'</td>';});foot+='<td>'+usd(grand)+'</td>';
+    tableWrap.innerHTML='<table class="dtable"><thead><tr><th>Market</th><th>Coffee</th><th>Espresso</th><th>Herbal Tea</th><th>Tea</th><th>Total</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr>'+foot+'</tr></tfoot></table>';}
+  tableBtn.addEventListener('click',function(){tableOn=!tableOn;
+    document.querySelector('.chart-holder').classList.toggle('hidden',tableOn);document.getElementById('legend').classList.toggle('hidden',tableOn);
+    document.getElementById('marketControls').classList.toggle('hidden',tableOn);tableWrap.classList.toggle('hidden',!tableOn);
+    tableBtn.textContent=tableOn?'Chart view':'Table view';if(tableOn)buildTable();});
+  window.__redraw=function(){buildLegend();render();};
+  buildLegend();render();buildTable();
+})();
+</script>
+</body>
+</html>

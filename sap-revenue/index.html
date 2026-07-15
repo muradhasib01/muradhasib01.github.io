@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAP BW Revenue Dashboard — MD Hasibur Rahman Murad</title>
+<meta name="description" content="Interactive SAP Business Warehouse revenue-by-product dashboard (Global Bike Inc.), built by MD Hasibur Rahman Murad.">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav><div class="nav-inner">
+  <a class="brand" href="../index.html">Hasibur&nbsp;Rahman&nbsp;Murad</a>
+  <div class="nav-links">
+    <a href="../index.html#dashboards">All Dashboards</a>
+    <a href="../index.html#projects">Projects</a>
+    <button class="themebtn" id="themeToggle" aria-label="Toggle theme">🌗</button>
+  </div>
+</div></nav>
+
+<div class="wrap dpage-top">
+  <a class="backlink" href="../index.html#dashboards">← Back to all dashboards</a>
+  <div class="dpage-title reveal">
+    <div class="role">Live Dashboard · SAP BW rebuild</div>
+    <h1>SAP BW — Revenue by Product</h1>
+    <p class="lead">From my SAP Business Warehouse revenue analysis of the Global&nbsp;Bike&nbsp;Inc. dataset, rebuilt as an interactive
+      ranked bar chart. <strong>Switch how many products to show and hover any bar.</strong> Revenue reconciles to $1.79B — matching my SAP report.</p>
+  </div>
+</div>
+
+<section style="padding-top:26px">
+  <div class="wrap reveal">
+    <div class="grid kpis">
+      <div class="kpi"><div class="label">Total Revenue</div><div class="val">$1.79B</div><div class="sub">across 29 products</div></div>
+      <div class="kpi"><div class="label">Top Product</div><div class="val" style="font-size:1.15rem;line-height:1.3">Prof. Touring Bike (silver)</div><div class="sub"><span data-count="227445800" data-prefix="$">$0</span></div></div>
+      <div class="kpi"><div class="label">Top 3 Share</div><div class="val" data-count="37" data-suffix="%">0%</div><div class="sub">of total revenue</div></div>
+      <div class="kpi"><div class="label">Bikes vs. Accessories</div><div class="val">98% / 2%</div><div class="sub">of revenue</div></div>
+    </div>
+
+    <div class="dash">
+      <div class="dash-head">
+        <div><h3>Revenue by Product (USD)</h3><p>Ranked highest to lowest. Hover a bar for exact revenue and share of total.</p></div>
+        <button class="btn" id="tableToggle" style="padding:8px 14px;font-size:.85rem">Table view</button>
+      </div>
+      <div class="controls" id="topControls">
+        <span class="ctl-label">Show</span>
+        <button class="chip active" data-n="10">Top 10</button>
+        <button class="chip" data-n="20">Top 20</button>
+        <button class="chip" data-n="29">All 29</button>
+      </div>
+      <div class="chart-holder">
+        <svg class="chart" id="chart" role="img" aria-label="Horizontal bar chart of SAP BW revenue by product"></svg>
+        <div class="tip" id="tip"></div>
+      </div>
+      <div id="tableWrap" class="hidden"></div>
+      <div class="insight"><b>Insight:</b> Revenue is highly concentrated — the top 3 touring &amp; road bikes alone drive <b>~37%</b> of all revenue,
+        and bikes account for ~98% overall. Accessories (helmets, pumps, kits) contribute marginally, signaling where cross-sell upside lies.</div>
+    </div>
+    <p style="margin-top:22px"><a class="btn" href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/07-sap-bw" target="_blank" rel="noopener">See the original SAP BW deliverables ↗</a></p>
+  </div>
+</section>
+
+<footer><div class="wrap">© <span id="yr"></span> MD Hasibur Rahman Murad · <a href="../index.html">Back to portfolio</a></div></footer>
+
+<script src="../common.js"></script>
+<script>
+(function(){
+  var DATA=[
+    ['PRTR2000','Professional Touring Bike (silver)',227445800.00],
+    ['DXTR2000','Deluxe Touring Bike (silver)',215848916.90],
+    ['PRRD1000','Professional Road Bike (Shimano)',209630340.32],
+    ['ORMN1000',"Men's Off Road Bike Fully",165424328.00],
+    ['DXRD1000','Deluxe Road Bike (Shimano)',134599898.90],
+    ['ORHT2000',"Men's Off Road Bike Hard Tail (SRAM)",132032068.58],
+    ['DXTR1000','Deluxe Touring Bike (black)',113476664.92],
+    ['PRTR1000','Professional Touring Bike (black)',112903719.63],
+    ['ORHT1000',"Men's Off Road Bike Hard Tail (Shimano)",84768538.18],
+    ['ORWN1000',"Women's Off Road Bike Fully",84639991.58],
+    ['ELBK1000','E-Bike Tailwind',69950650.24],
+    ['PRRD2000','Professional Road Bike (SRAM)',59750910.36],
+    ['PRRD3000','Professional Road Bike (Campagnolo)',59051036.94],
+    ['DXRD2000','Deluxe Road Bike (SRAM)',43534604.36],
+    ['PRTR3000','Professional Touring Bike (red)',24531197.68],
+    ['DXTR3000','Deluxe Touring Bike (red)',22796534.38],
+    ['CITY1000','City Bike Max',7273987.84],
+    ['PUMP1000','Air Pump',3690596.60],
+    ['FXGR1000','Fixed Gear Bike Plus',3199547.94],
+    ['FAID1000','First Aid Kit',2155115.02],
+    ['CAGE1000','Water Bottle Cage',1399448.44],
+    ['OHMT1000','Off Road Helmet',1336212.94],
+    ['RHMT1000','Road Helmet',1275005.59],
+    ['HVBD1000','Hoverboard',1069580.18],
+    ['KPAD1000','Knee Pads',1015025.62],
+    ['EPAD1000','Elbow Pads',955127.63],
+    ['RKIT1000','Repair Kit',841233.46],
+    ['SHRT1000','T-shirt',772966.09],
+    ['BOTL1000','Water Bottle',507631.51]
+  ];
+  var TOTAL=DATA.reduce(function(s,d){return s+d[2];},0);
+  var svg=document.getElementById('chart'), tip=document.getElementById('tip'), NS='http://www.w3.org/2000/svg';
+  function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+  function accent(){return getComputedStyle(document.documentElement).getPropertyValue('--s1').trim();}
+  function fmt(v){if(v>=1e9)return '$'+(v/1e9).toFixed(2)+'B';if(v>=1e6)return '$'+(v/1e6).toFixed(1)+'M';if(v>=1e3)return '$'+(v/1e3).toFixed(0)+'K';return '$'+v.toFixed(0);}
+  var state={n:10};
+  function render(){
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    var rows=DATA.slice(0,state.n), W=760, rowH=state.n>20?21:28, mT=10, mB=8, mL=230, mR=70;
+    var H=mT+rows.length*rowH+mB; svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    var x0=mL, x1=W-mR, plotW=x1-x0, maxV=rows[0][2], c=accent();
+    rows.forEach(function(d,i){
+      var y=mT+i*rowH, bh=Math.min(16,rowH-6), by=y+(rowH-bh)/2, w=(d[2]/maxV)*plotW;
+      // label
+      var lb=el('text',{x:x0-10,y:by+bh-3,'text-anchor':'end',class:'ylab'});
+      var nm=d[1].length>30?d[1].slice(0,29)+'…':d[1]; lb.textContent=nm; svg.appendChild(lb);
+      // bar
+      var r=el('rect',{class:'bar',x:x0,y:by.toFixed(1),width:Math.max(2,w).toFixed(1),height:bh,rx:4,fill:c});
+      r.addEventListener('mousemove',function(ev){showTip(ev,d);}); r.addEventListener('mouseleave',hideTip); svg.appendChild(r);
+      // value label
+      var vl=el('text',{x:(x0+w+7).toFixed(1),y:by+bh-3,class:'barlabh'}); vl.textContent=fmt(d[2]); svg.appendChild(vl);
+    });
+  }
+  function showTip(ev,d){
+    tip.innerHTML='<b>'+d[1]+'</b> <span style="opacity:.6">('+d[0]+')</span><br><span class="tt-metric">$'+Math.round(d[2]).toLocaleString('en-US')+'</span> &nbsp;('+(d[2]/TOTAL*100).toFixed(1)+'% of total)';
+    var holder=svg.parentElement.getBoundingClientRect();tip.style.left=(ev.clientX-holder.left)+'px';tip.style.top=(ev.clientY-holder.top)+'px';tip.style.opacity='1';}
+  function hideTip(){tip.style.opacity='0';}
+  document.getElementById('topControls').addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;
+    [].slice.call(this.querySelectorAll('.chip')).forEach(function(c){c.classList.remove('active')});b.classList.add('active');state.n=+b.getAttribute('data-n');render();});
+  var tableWrap=document.getElementById('tableWrap'),tableBtn=document.getElementById('tableToggle'),tableOn=false;
+  function buildTable(){var rows='';DATA.forEach(function(d,i){rows+='<tr><td>'+(i+1)+'</td><td>'+d[1]+'</td><td>'+d[0]+'</td><td>$'+Math.round(d[2]).toLocaleString('en-US')+'</td><td>'+(d[2]/TOTAL*100).toFixed(1)+'%</td></tr>';});
+    tableWrap.innerHTML='<table class="dtable"><thead><tr><th>#</th><th>Product</th><th>Code</th><th>Revenue</th><th>Share</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td></td><td>Total</td><td></td><td>$'+Math.round(TOTAL).toLocaleString('en-US')+'</td><td>100%</td></tr></tfoot></table>';}
+  tableBtn.addEventListener('click',function(){tableOn=!tableOn;
+    document.querySelector('.chart-holder').classList.toggle('hidden',tableOn);document.getElementById('topControls').classList.toggle('hidden',tableOn);
+    tableWrap.classList.toggle('hidden',!tableOn);tableBtn.textContent=tableOn?'Chart view':'Table view';if(tableOn)buildTable();});
+  window.__redraw=render; render(); buildTable();
+})();
+</script>
+</body>
+</html>
