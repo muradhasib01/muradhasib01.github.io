@@ -226,3 +226,19 @@ table.dtable tfoot td{font-weight:800;border-top:2px solid var(--baseline);borde
 
 footer{border-top:1px solid var(--border);padding:34px 0;text-align:center;color:var(--muted);font-size:.86rem}
 footer a{color:var(--text-2);font-weight:600}
+
+/* ===== photo + premium interactions ===== */
+.cred-photo{width:108px;height:108px;border-radius:50%;object-fit:cover;display:block;
+  background:var(--surface-2);
+  box-shadow:0 0 0 3px var(--surface),0 0 0 6px color-mix(in srgb,var(--accent) 55%,transparent),0 16px 34px -10px color-mix(in srgb,var(--accent) 55%,transparent);
+  transition:transform .35s ease}
+.credcard:hover .cred-photo{transform:scale(1.05)}
+
+/* 3D tilt + cursor spotlight (added via JS) */
+.tilt{transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,border-color .25s ease;transform-style:preserve-3d;will-change:transform}
+.spot{position:relative}
+.spot::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s ease;z-index:4;
+  background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--accent) 20%,transparent),transparent 55%)}
+.spot:hover::after{opacity:1}
+.btn.primary{will-change:transform;transition:transform .2s cubic-bezier(.2,.8,.2,1),filter .2s,box-shadow .2s}
+@media (prefers-reduced-motion:reduce){.tilt,.btn.primary{transition:none}.cred-photo{transition:none}}

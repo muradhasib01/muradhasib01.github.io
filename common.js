@@ -75,4 +75,32 @@
   b.addEventListener('click',function(){scrollTo({top:0,behavior:'smooth'});});
 })();
 
+/* premium interactions: cursor spotlight + 3D tilt + magnetic buttons */
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if(reduce || !fine) return;
+  // spotlight + tilt on cards
+  [].slice.call(document.querySelectorAll('.gcard,.proj,.skill-card,.credcard,.contact-card')).forEach(function(card){
+    card.classList.add('spot','tilt');
+    var flat = card.classList.contains('contact-card'); // glow but no tilt on big banner
+    card.addEventListener('mousemove',function(e){
+      var r=card.getBoundingClientRect();
+      var px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+      card.style.setProperty('--mx',(px*100).toFixed(1)+'%');
+      card.style.setProperty('--my',(py*100).toFixed(1)+'%');
+      if(!flat){var rx=(0.5-py)*6, ry=(px-0.5)*6;
+        card.style.transform='perspective(950px) rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg) translateY(-5px)';}
+    });
+    card.addEventListener('mouseleave',function(){card.style.transform='';});
+  });
+  // magnetic primary buttons
+  [].slice.call(document.querySelectorAll('.btn.primary')).forEach(function(b){
+    b.addEventListener('mousemove',function(e){var r=b.getBoundingClientRect();
+      var x=e.clientX-r.left-r.width/2, y=e.clientY-r.top-r.height/2;
+      b.style.transform='translate('+(x*0.22).toFixed(1)+'px,'+(y*0.32).toFixed(1)+'px)';});
+    b.addEventListener('mouseleave',function(){b.style.transform='';});
+  });
+})();
+
 (function(){var y=document.getElementById('yr'); if(y)y.textContent='2026';})();
