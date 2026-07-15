@@ -139,4 +139,47 @@
   resize(); start();
 })();
 
+/* interactive SQL showcase: question -> query */
+(function(){
+  var tabs=document.getElementById('sqlTabs'); if(!tabs) return;
+  var codeEl=document.getElementById('sqlCode'), noteEl=document.getElementById('sqlNote'),
+      fnameEl=document.querySelector('.sql-bar .fname'), copyBtn=document.getElementById('sqlCopy');
+  var SQLS=[
+    {file:'top_product_per_market.sql', note:'A window function ranks product types within each market.',
+     code:"SELECT s.market,\n       p.product_type,\n       SUM(f.sales) AS total_sales,\n       RANK() OVER (PARTITION BY s.market\n                    ORDER BY SUM(f.sales) DESC) AS rnk\nFROM   fact_sales f\nJOIN   product_dim p ON f.product_id = p.product_id\nJOIN   store_dim   s ON f.area_code  = s.area_code\nGROUP BY s.market, p.product_type;"},
+    {file:'loss_making_products.sql', note:'HAVING keeps only products with negative total profit.',
+     code:"SELECT p.product_description,\n       SUM(f.profit) AS total_profit\nFROM   fact_sales f\nJOIN   product_dim p ON f.product_id = p.product_id\nGROUP BY p.product_description\nHAVING SUM(f.profit) < 0\nORDER BY total_profit ASC;"},
+    {file:'market_share.sql', note:'A subquery computes how each market contributes to company-wide sales.',
+     code:"SELECT s.market,\n       SUM(f.sales) AS market_sales,\n       ROUND(SUM(f.sales) * 100.0\n             / (SELECT SUM(sales) FROM fact_sales), 1) AS pct_of_total\nFROM   fact_sales f\nJOIN   store_dim s ON f.area_code = s.area_code\nGROUP BY s.market\nORDER BY market_sales DESC;"},
+    {file:'margin_bands.sql', note:'A CASE expression buckets each product type by profit margin.',
+     code:"SELECT p.product_type,\n       ROUND(SUM(f.profit) * 100.0\n             / NULLIF(SUM(f.sales), 0), 1) AS margin_pct,\n       CASE WHEN SUM(f.profit) / NULLIF(SUM(f.sales),0) >= 0.30 THEN 'High'\n            WHEN SUM(f.profit) / NULLIF(SUM(f.sales),0) >= 0.15 THEN 'Healthy'\n            ELSE 'Low / watch' END AS margin_band\nFROM   fact_sales f\nJOIN   product_dim p ON f.product_id = p.product_id\nGROUP BY p.product_type;"}
+  ];
+  var KW='SELECT|FROM|WHERE|JOIN|INNER|LEFT|RIGHT|OUTER|ON|GROUP\\s+BY|ORDER\\s+BY|HAVING|AS|WITH|CASE|WHEN|THEN|ELSE|END|AND|OR|NOT|IS|NULL|DESC|ASC|OVER|PARTITION\\s+BY|DISTINCT';
+  var FN='SUM|COUNT|AVG|MIN|MAX|RANK|ROUND|NULLIF|COALESCE|ROW_NUMBER|DENSE_RANK';
+  var RE=new RegExp('(--[^\\n]*)|(\'[^\']*\')|\\b('+KW+')\\b|\\b('+FN+')\\b(?=\\s*\\()|\\b(\\d+(?:\\.\\d+)?)\\b','gi');
+  function hl(code){
+    var esc=code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return esc.replace(RE,function(m,com,str,kw,fn,num){
+      if(com)return '<span class="c-com">'+com+'</span>';
+      if(str)return '<span class="c-str">'+str+'</span>';
+      if(kw)return '<span class="c-kw">'+kw+'</span>';
+      if(fn)return '<span class="c-fn">'+fn+'</span>';
+      if(num)return '<span class="c-num">'+num+'</span>';
+      return m;
+    });
+  }
+  function show(i){
+    var q=SQLS[i]; codeEl.innerHTML=hl(q.code); codeEl.setAttribute('data-raw',q.code);
+    noteEl.innerHTML='<b>&#10003;</b> '+q.note; if(fnameEl)fnameEl.textContent=q.file;
+    [].slice.call(tabs.querySelectorAll('.sqltab')).forEach(function(b){b.classList.toggle('active',+b.getAttribute('data-q')===i);});
+  }
+  tabs.addEventListener('click',function(e){var b=e.target.closest('.sqltab'); if(b)show(+b.getAttribute('data-q'));});
+  if(copyBtn)copyBtn.addEventListener('click',function(){
+    var raw=codeEl.getAttribute('data-raw')||codeEl.textContent;
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(raw).then(function(){
+      copyBtn.textContent='Copied!'; setTimeout(function(){copyBtn.textContent='Copy';},1400);});}
+  });
+  show(0);
+})();
+
 (function(){var y=document.getElementById('yr'); if(y)y.textContent='2026';})();
