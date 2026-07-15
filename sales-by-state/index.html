@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales by U.S. State — MD Hasibur Rahman Murad</title>
+<meta name="description" content="Interactive US tile-grid map of Superstore sales by state, built by MD Hasibur Rahman Murad.">
+<link rel="stylesheet" href="../style.css">
+<style>
+  .tile{stroke:var(--surface);stroke-width:3;cursor:default;transition:opacity .12s}
+  .tile:hover{opacity:.8}
+  .tile-empty{fill:var(--surface-2);stroke:var(--surface);stroke-width:3}
+  .tile-lab{font-size:12px;font-weight:700;text-anchor:middle;dominant-baseline:middle;pointer-events:none;font-family:system-ui,sans-serif}
+  .maplegend{display:flex;flex-wrap:wrap;gap:2px;align-items:center;margin:10px 0 2px;font-size:.8rem;color:var(--text-2)}
+  .maplegend .sw{width:26px;height:14px;display:inline-block}
+  .maplegend .lbl{margin:0 8px 0 4px}
+</style>
+</head>
+<body>
+<nav><div class="nav-inner">
+  <a class="brand" href="../index.html">Hasibur&nbsp;Rahman&nbsp;Murad</a>
+  <div class="nav-links">
+    <a href="../index.html#dashboards">All Dashboards</a>
+    <a href="../index.html#projects">Projects</a>
+    <button class="themebtn" id="themeToggle" aria-label="Toggle theme">🌗</button>
+  </div>
+</div></nav>
+
+<div class="wrap dpage-top">
+  <a class="backlink" href="../index.html#dashboards">← Back to all dashboards</a>
+  <div class="dpage-title reveal">
+    <div class="role">Live Dashboard · Tableau rebuild</div>
+    <h1>Sales by U.S. State</h1>
+    <p class="lead">From my Tableau "Sales by State" analysis of the Sample&nbsp;–&nbsp;Superstore dataset, rebuilt as an interactive
+      tile-grid map. <strong>Switch between sales and orders, and hover any state.</strong> Figures computed directly from the source data (US total $2,297,201).</p>
+  </div>
+</div>
+
+<section style="padding-top:26px">
+  <div class="wrap reveal">
+    <div class="grid kpis">
+      <div class="kpi"><div class="label">Total U.S. Sales</div><div class="val" data-count="2297201" data-prefix="$">$0</div><div class="sub">48 states + DC</div></div>
+      <div class="kpi"><div class="label">Top State</div><div class="val">California</div><div class="sub"><span data-count="457688" data-prefix="$">$0</span></div></div>
+      <div class="kpi"><div class="label">Top 5 Share</div><div class="val" data-count="52" data-suffix="%">0%</div><div class="sub">CA, NY, TX, WA, PA</div></div>
+      <div class="kpi"><div class="label">Total Orders</div><div class="val" data-count="9994">0</div><div class="sub">line items</div></div>
+    </div>
+
+    <div class="dash">
+      <div class="dash-head">
+        <div><h3>Sales by State — tile map</h3><p>Each tile is a state, shaded by value (quantile bins). Hover for exact figures.</p></div>
+        <button class="btn" id="tableToggle" style="padding:8px 14px;font-size:.85rem">Table view</button>
+      </div>
+      <div class="controls" id="metricControls">
+        <span class="ctl-label">Metric</span>
+        <button class="chip active" data-metric="sales">Sales</button>
+        <button class="chip" data-metric="orders">Orders</button>
+      </div>
+      <div class="maplegend" id="legend"></div>
+      <div class="chart-holder">
+        <svg class="chart" id="chart" viewBox="0 0 720 470" role="img" aria-label="US tile grid map of sales by state"></svg>
+        <div class="tip" id="tip"></div>
+      </div>
+      <div id="tableWrap" class="hidden"></div>
+      <div class="insight"><b>Insight:</b> Sales are heavily coastal — <b>California</b> ($457,688) and <b>New York</b> ($310,876) alone are
+        ~33% of U.S. sales, and the top 5 states make up more than half. Many central states fall below $10,000, highlighting under-penetrated markets.</div>
+    </div>
+    <p style="margin-top:22px"><a class="btn" href="https://github.com/muradhasib01/business-intelligence-portfolio/tree/main/05-tableau" target="_blank" rel="noopener">See the original Tableau deliverable ↗</a></p>
+  </div>
+</section>
+
+<footer><div class="wrap">© <span id="yr"></span> MD Hasibur Rahman Murad · <a href="../index.html">Back to portfolio</a></div></footer>
+
+<script src="../common.js"></script>
+<script>
+(function(){
+  // abbr: [fullName, sales, orders]
+  var S={
+    CA:['California',457687.63,2001], NY:['New York',310876.27,1128], TX:['Texas',170188.05,985],
+    WA:['Washington',138641.27,506], PA:['Pennsylvania',116511.91,587], FL:['Florida',89473.71,383],
+    IL:['Illinois',80166.10,492], OH:['Ohio',78258.14,469], MI:['Michigan',76269.61,255],
+    VA:['Virginia',70636.72,224], NC:['North Carolina',55603.16,249], IN:['Indiana',53555.36,149],
+    GA:['Georgia',49095.84,184], KY:['Kentucky',36591.75,139], NJ:['New Jersey',35764.31,130],
+    AZ:['Arizona',35282.00,224], WI:['Wisconsin',32114.61,110], CO:['Colorado',32108.12,182],
+    TN:['Tennessee',30661.87,183], MN:['Minnesota',29863.15,89], MA:['Massachusetts',28634.43,135],
+    DE:['Delaware',27451.07,96], MD:['Maryland',23705.52,105], RI:['Rhode Island',22627.96,56],
+    MO:['Missouri',22205.15,66], OK:['Oklahoma',19683.39,66], AL:['Alabama',19510.64,61],
+    OR:['Oregon',17431.15,124], NV:['Nevada',16729.10,39], CT:['Connecticut',13384.36,82],
+    AR:['Arkansas',11678.13,60], UT:['Utah',11220.06,53], MS:['Mississippi',10771.34,53],
+    LA:['Louisiana',9217.03,42], VT:['Vermont',8929.37,11], SC:['South Carolina',8481.71,42],
+    NE:['Nebraska',7464.93,38], NH:['New Hampshire',7292.52,27], MT:['Montana',5589.35,15],
+    NM:['New Mexico',4783.52,37], IA:['Iowa',4579.76,30], ID:['Idaho',4382.49,21],
+    KS:['Kansas',2914.31,24], DC:['District of Columbia',2865.02,10], WY:['Wyoming',1603.14,1],
+    SD:['South Dakota',1315.56,12], ME:['Maine',1270.53,8], WV:['West Virginia',1209.82,4],
+    ND:['North Dakota',919.91,7]
+  };
+  // tile grid [row,col]
+  var G={
+    AK:[0,0], ME:[0,10],
+    VT:[1,9], NH:[1,10],
+    WA:[2,0], ID:[2,1], MT:[2,2], ND:[2,3], MN:[2,4], WI:[2,5], MI:[2,6], NY:[2,9], MA:[2,10],
+    OR:[3,0], NV:[3,1], WY:[3,2], SD:[3,3], IA:[3,4], IL:[3,5], IN:[3,6], OH:[3,7], PA:[3,8], NJ:[3,9], CT:[3,10], RI:[3,11],
+    CA:[4,0], UT:[4,1], CO:[4,2], NE:[4,3], MO:[4,4], KY:[4,5], WV:[4,6], VA:[4,7], MD:[4,8], DE:[4,9],
+    AZ:[5,1], NM:[5,2], KS:[5,3], AR:[5,4], TN:[5,5], NC:[5,6], SC:[5,7], DC:[5,8],
+    OK:[6,3], LA:[6,4], MS:[6,5], AL:[6,6], GA:[6,7],
+    HI:[7,0], TX:[7,3], FL:[7,8]
+  };
+  var RAMP_L=['#dbeafe','#93c5fd','#3b82f6','#1d4ed8','#1e3a8a'];
+  var RAMP_D=['#17233b','#1e40af','#2563eb','#4d8bff','#93c5fd'];
+  function darkMode(){var t=document.documentElement.getAttribute('data-theme');
+    if(t==='dark')return true; if(t==='light')return false; return matchMedia('(prefers-color-scheme: dark)').matches;}
+  function ramp(){return darkMode()?RAMP_D:RAMP_L;}
+  var svg=document.getElementById('chart'), tip=document.getElementById('tip'), legend=document.getElementById('legend');
+  var NS='http://www.w3.org/2000/svg';
+  function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);return e;}
+  function money(v){return '$'+Math.round(v).toLocaleString('en-US');}
+  var state={metric:'sales'};
+  function metricVal(abbr){return state.metric==='sales'?S[abbr][1]:S[abbr][2];}
+  // quantile thresholds -> bin 0..4
+  function bins(){
+    var vals=Object.keys(S).map(metricVal).sort(function(a,b){return a-b;});
+    var q=[]; for(var i=1;i<5;i++){q.push(vals[Math.floor(i/5*vals.length)]);} return q;
+  }
+  function binOf(v,q){for(var i=0;i<q.length;i++){if(v<q[i])return i;} return 4;}
+  function render(){
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    var cell=58, size=50, ox=6, oy=6, R=ramp(), q=bins();
+    Object.keys(G).forEach(function(abbr){
+      var pos=G[abbr], x=ox+pos[1]*cell, y=oy+pos[0]*cell, has=S[abbr];
+      if(!has){
+        svg.appendChild(el('rect',{class:'tile-empty',x:x,y:y,width:size,height:size,rx:7}));
+        var te=el('text',{class:'tile-lab',x:x+size/2,y:y+size/2,fill:'var(--muted)'});te.textContent=abbr;svg.appendChild(te);
+        return;
+      }
+      var v=metricVal(abbr), b=binOf(v,q), fill=R[b];
+      var r=el('rect',{class:'tile',x:x,y:y,width:size,height:size,rx:7,fill:fill});
+      r.addEventListener('mousemove',function(ev){showTip(ev,abbr);});r.addEventListener('mouseleave',hideTip);svg.appendChild(r);
+      var txtColor = (darkMode()? (b<=1?'#c9d6ef':'#0b1220') : (b>=3?'#ffffff':'#0b1220'));
+      var t=el('text',{class:'tile-lab',x:x+size/2,y:y+size/2,fill:txtColor});t.textContent=abbr;svg.appendChild(t);
+    });
+    buildLegend(q);
+  }
+  function buildLegend(q){
+    var R=ramp(), fmt=state.metric==='sales'?function(v){return '$'+Math.round(v/1000)+'k';}:function(v){return Math.round(v);};
+    var bounds=['0'].concat(q.map(fmt)).concat(['max']);
+    var html='<span class="ctl-label" style="margin-right:6px">'+(state.metric==='sales'?'Sales':'Orders')+'</span>';
+    for(var i=0;i<5;i++){html+='<span class="sw" style="background:'+R[i]+'"></span>';}
+    html+='<span class="lbl">low → high</span>';
+    legend.innerHTML=html;
+  }
+  function showTip(ev,abbr){
+    var d=S[abbr], total=2297200.85;
+    tip.innerHTML='<b>'+d[0]+'</b><br><span class="tt-metric">'+money(d[1])+'</span> · '+d[2]+' orders<br>'+(d[1]/total*100).toFixed(1)+'% of U.S. sales';
+    var holder=svg.parentElement.getBoundingClientRect();tip.style.left=(ev.clientX-holder.left)+'px';tip.style.top=(ev.clientY-holder.top)+'px';tip.style.opacity='1';}
+  function hideTip(){tip.style.opacity='0';}
+  document.getElementById('metricControls').addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;
+    [].slice.call(this.querySelectorAll('.chip')).forEach(function(c){c.classList.remove('active')});b.classList.add('active');state.metric=b.getAttribute('data-metric');render();});
+  var tableWrap=document.getElementById('tableWrap'),tableBtn=document.getElementById('tableToggle'),tableOn=false;
+  function buildTable(){
+    var arr=Object.keys(S).map(function(a){return [S[a][0],S[a][1],S[a][2]];}).sort(function(a,b){return b[1]-a[1];});
+    var rows='';arr.forEach(function(d,i){rows+='<tr><td>'+(i+1)+'</td><td>'+d[0]+'</td><td>'+money(d[1])+'</td><td>'+d[2]+'</td></tr>';});
+    tableWrap.innerHTML='<table class="dtable"><thead><tr><th>#</th><th>State</th><th>Sales</th><th>Orders</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td></td><td>U.S. Total</td><td>$2,297,201</td><td>9,994</td></tr></tfoot></table>';}
+  tableBtn.addEventListener('click',function(){tableOn=!tableOn;
+    document.querySelector('.chart-holder').classList.toggle('hidden',tableOn);document.getElementById('metricControls').classList.toggle('hidden',tableOn);
+    document.getElementById('legend').classList.toggle('hidden',tableOn);tableWrap.classList.toggle('hidden',!tableOn);
+    tableBtn.textContent=tableOn?'Map view':'Table view';if(tableOn)buildTable();});
+  window.__redraw=render; render(); buildTable();
+})();
+</script>
+</body>
+</html>
