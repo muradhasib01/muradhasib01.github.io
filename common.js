@@ -260,10 +260,18 @@
   function open(key){var p=P[key]; if(!p) return; dlg.innerHTML=render(p); dlg.showModal();
     var b=dlg.querySelector('.pm-body'); if(b)b.scrollTop=0;}
   [].slice.call(document.querySelectorAll('.proj[data-modal]')).forEach(function(card){
-    card.setAttribute('role','button'); card.setAttribute('tabindex','0'); card.setAttribute('aria-haspopup','dialog');
-    function go(e){ if(e.target.closest('a')) return; card.style.transform=''; last=card; open(card.getAttribute('data-modal')); }
-    card.addEventListener('click',go);
-    card.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!e.target.closest('a')){ e.preventDefault(); go(e); } });
+    var more=card.querySelector('.more');
+    function go(){ card.style.transform=''; last=more||card; open(card.getAttribute('data-modal')); }
+    // The accessible trigger is the .more cue — a real button, so it is not
+    // nested inside anything and does not collide with the card's <a> links.
+    if(more){
+      more.setAttribute('role','button'); more.setAttribute('tabindex','0'); more.setAttribute('aria-haspopup','dialog');
+      more.addEventListener('click',function(e){ e.stopPropagation(); go(); });
+      more.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+    }
+    // Whole-card click is a mouse-only convenience; the card carries no ARIA
+    // role, so assistive tech is routed to the .more button and the links.
+    card.addEventListener('click',function(e){ if(e.target.closest('a')||e.target.closest('.more')) return; go(); });
   });
   dlg.addEventListener('click',function(e){ if(e.target===dlg||e.target.closest('.pm-close')) dlg.close(); });
   dlg.addEventListener('close',function(){ if(last&&last.focus) last.focus(); });

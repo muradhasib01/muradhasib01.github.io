@@ -287,6 +287,13 @@ a.btn[href*="github"]:hover{color:var(--text);border-color:var(--text-2)}
 .sql-note{padding:13px 22px 16px;color:#8b98b5;font-size:.85rem;border-top:1px solid #1d2942}
 .sql-note b{color:#5ad4c0}
 
+/* ===== Project sub-groups ===== */
+.proj-group{font-size:.76rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text-2);
+  margin:44px 0 0;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.proj-group:first-of-type{margin-top:30px}
+.proj-group:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.proj-group + .projects-grid{margin-top:20px}
+
 /* ===== Project detail modal ===== */
 .proj[data-modal]{cursor:pointer}
 .proj .more{font-weight:700;color:var(--accent);font-size:.88rem}
