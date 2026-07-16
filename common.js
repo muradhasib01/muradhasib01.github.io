@@ -182,4 +182,91 @@
   show(0);
 })();
 
+/* project detail modals */
+(function(){
+  var dlg=document.getElementById('projModal'); if(!dlg||!dlg.showModal) return;
+  var GH='https://github.com/muradhasib01/', BI=GH+'business-intelligence-portfolio/tree/main/', MIS=GH+'mis-graduate-portfolio/tree/main/';
+  var P={
+    'coffee-dw':{k:'SQL & Data Modeling',t:'Coffee Chain Data Warehouse',
+      f:'A star-schema warehouse (fact plus product, store and budget dimensions) modeled in Access, then written as portable SQL — window functions rank product types within each market, HAVING isolates loss-making products, and a CASE expression buckets each product type into margin bands. <strong>Totals reconcile to $819,811</strong>, matching the Tableau dashboards the model powers.',
+      chips:[{b:'Star schema',s:'fact + 3 dims'},{b:'$819,811',s:'totals reconcile'}],
+      links:[{h:BI+'03-ms-access',t:'Star-schema SQL ↗'},{h:BI+'05-tableau',t:'Dashboards ↗'}]},
+    'tableau-geo':{k:'Tableau',t:'Sales Geography & Market Mix',
+      f:'Two questions, two encodings of the same measure. A US tile-grid map shaded by sales answers <strong>where</strong>; grouped cross-tab bars answer <strong>what</strong>, and in what order. Texas leads on total sales while carrying a lower average than Wyoming — volume, not basket size, a distinction the map alone would hide.',
+      chips:[{b:'$2.3M',s:'superstore sales'},{b:'$819,811',s:'coffee chain'}],
+      shots:[{s:'assets/tableau-sales-by-state-map.png',a:'Tableau tile-grid map of US sales',c:'Sales by U.S. state — tile-grid choropleth'},
+             {s:'assets/tableau-sales-by-market.png',a:'Tableau grouped bars by market and product',c:'Sales by market & product type'}],
+      links:[{h:BI+'05-tableau',t:'View on GitHub ↗'}]},
+    'sap-bw':{k:'SAP Business Warehouse',t:'Enterprise Revenue Reporting',
+      f:'Revenue reporting at scale on Global Bike Inc. — InfoObjects and Key Figures with exception aggregation, mapped onto a snowflake-schema fact table. 29 products ranked by revenue, <strong>$1.79B total</strong>, with share-of-total available on demand.',
+      chips:[{b:'$1.79B',s:'total revenue'},{b:'29',s:'products ranked'}],
+      shots:[{s:'assets/sap-bw-revenue-by-product.png',a:'SAP BW revenue by product',c:'Revenue by product — Global Bike Inc.'}],
+      links:[{h:BI+'07-sap-bw',t:'View on GitHub ↗'}]},
+    'sas-dist':{k:'SAS Visual Analytics',t:'Distribution & Profitability',
+      f:'Box-plot distributions of compensation across 8 job titles (647 employees), category-vs-measure classification, and cross-country profitability. The distribution view exposes spread and outliers that a single average would flatten away.',
+      chips:[{b:'647',s:'employees'},{b:'8',s:'job titles'}],
+      shots:[{s:'assets/sas-salary-boxplot-dashboard.png',a:'SAS salary box-plot dashboard',c:'Salary distribution by job title'}],
+      links:[{h:BI+'04-sas',t:'View on GitHub ↗'}]},
+    'excel-prod':{k:'Analysis · Excel',t:'Product & Sales Analysis',
+      f:'Fast analysis without a database — isolating underperforming product lines, loss-making products, and the top cities by orders and profit, then framing each finding as a decision a manager can actually act on.',
+      chips:[{b:'Excel',s:'no database'},{b:'Loss-makers',s:'flagged by profit'}],
+      links:[{h:BI+'02-data-analysis',t:'View on GitHub ↗'}]},
+    'oltp-olap':{k:'BI Foundations',t:'OLTP vs. OLAP',
+      f:'Why a manager can’t make decisions from a transaction report — and how an analytical (OLAP) view of the same Global Bike data turns rows of transactions into answers. The foundational argument for why data warehousing exists at all.',
+      chips:[{b:'OLTP → OLAP',s:'transactional vs analytical'}],
+      links:[{h:BI+'01-oltp-olap',t:'View on GitHub ↗'}]},
+    'covid':{k:'Research · Python · SEC EDGAR',t:'COVID-19 & Retail: Walmart vs. Target',
+      f:'Ten years of SEC EDGAR 10-K filings, reconciled across two filers that don’t report alike, then compared. <strong>Target grew 3.8× faster</strong> through the pandemic (+35.71% vs +9.31%) and reached 8.44% operating margin — then gave it back: net income <strong>−60%</strong> in 2022 with free cash flow going <strong>negative</strong> on flat revenue. Surge and resilience are different things. The whole study rebuilds from source in two commands, no dependencies.',
+      chips:[{b:'3.8×',s:'faster growth'},{b:'−60%',s:'2022 net income'},{b:'−$1.51B',s:'2022 free cash flow'}],
+      links:[{h:MIS+'02-data-analytics/edgar',t:'Run the pipeline ↗'},{h:MIS+'02-data-analytics',t:'Read the study ↗'}]},
+    'predictive':{k:'Predictive Analytics · SAP Analytics Cloud',t:'Clustering, Forecasting & Regression',
+      f:'Segmentation, association rules, forecasting and regression — read skeptically. Two regression models had near-identical confidence (99.35% vs 99.99%) but their RMSE differed <strong>tenfold</strong> (3.018 vs 0.26); against a target mean of 5.28, the “confident” model’s error was worth more than half the average value. A metric pinned near 100% can look decisive and discriminate nothing.',
+      chips:[{b:'0.26 vs 3.018',s:'RMSE — 10× gap'},{b:'99.35–99.99%',s:'confidence, saturated'},{b:'10.29%',s:'forecast MAPE'}],
+      shots:[{s:'assets/proof/sac-regression-model-comparison.png',a:'SAC model comparison table',c:'Two models: RMSE 0.26 vs 3.018 at near-identical confidence'},
+             {s:'assets/proof/sac-regression-predicted-vs-actual.png',a:'Predicted vs actual chart',c:'Predicted vs. actual with validation error bands'},
+             {s:'assets/proof/sac-store-clustering-bubble.png',a:'k-means store clustering',c:'k-means store segmentation — three clusters'},
+             {s:'assets/proof/sac-time-series-forecast.png',a:'Time series forecast',c:'Forecast vs. actual — expected MAPE 10.29%'},
+             {s:'assets/proof/sac-titanic-association-rules.png',a:'Association rules',c:'Association rules ranked by frequency'}],
+      links:[{h:MIS+'01-data-mining',t:'View on GitHub ↗'}]},
+    'erpsim':{k:'SAP S/4HANA · ERPSim',t:'Live ERP Simulation Analysis',
+      f:'A multi-round competitive simulation run in a real S/4HANA system (Team A, finished 3rd), then analysis of the game’s own transaction data. <strong>500g Nut Muesli — the single highest-revenue product — sold nothing at all through Hypermarkets.</strong> The best product was absent from a whole channel, a gap invisible in revenue rankings and visible only by crossing product against channel. Smart Discovery rated only Quantity a moderate driver of revenue; price, product, team and channel all came back weak.',
+      chips:[{b:'3rd',s:'of the field'},{b:'24.4M',s:'top-product revenue'},{b:'0',s:'its hypermarket sales'}],
+      shots:[{s:'assets/proof/sac-erpsim-revenue-per-product.png',a:'ERPSim revenue per product',c:'Revenue per product — 500g Nut Muesli leads'},
+             {s:'assets/proof/sac-erpsim-key-influencers.png',a:'Smart Discovery key influencers',c:'Smart Discovery: only Quantity is a moderate driver'}],
+      links:[{h:MIS+'05-sap-enterprise',t:'View on GitHub ↗'}]},
+    'pm-evm':{k:'Project Management · Primavera P6',t:'Earned Value & Critical Path',
+      f:'A project simultaneously <strong>ahead of schedule (SPI 1.09) and over budget (CPI 0.89)</strong> — the signature of buying speed with money, visible only when the two indices are read together. Estimate at completion $22,472 against a $20,000 budget, finishing about a month early. Plus critical-path float analysis where a 5-day slip moved the deadline zero days but cut an activity’s float from 8 days to 3.',
+      chips:[{b:'SPI 1.09',s:'ahead of schedule'},{b:'CPI 0.89',s:'over budget'},{b:'$22,472',s:'EAC vs $20k'}],
+      shots:[{s:'assets/proof/p6-activity-schedule-float.png',a:'Primavera P6 float table',c:'Primavera P6 — free float vs. total float per activity'}],
+      links:[{h:MIS+'04-project-management',t:'View on GitHub ↗'}]},
+    'oracle-sql':{k:'Oracle SQL',t:'SQL That Survives the Data Changing',
+      f:'Coursework rebuilt as runnable, commented SQL across DQL, DDL and DML — documenting the places the obvious query is quietly wrong: <strong>manager_id = NULL</strong> matches nothing (three-valued logic), <strong>NOT IN</strong> collapses against a NULL in the list, and <strong>IN</strong> beats <strong>=</strong> in a subquery that must survive a second matching row. SQL written to stay correct as the data changes, not just against today’s rows.',
+      chips:[{b:'DQL·DDL·DML',s:'3 script files'},{b:'3VL',s:'NULL-safe logic'}],
+      links:[{h:MIS+'03-database-management',t:'View the SQL ↗'}]}
+  };
+  function chip(c){return '<div class="pm-chip"><b>'+c.b+'</b><small>'+c.s+'</small></div>';}
+  function shot(s){return '<figure><img src="'+s.s+'" alt="'+s.a+'" loading="lazy"><figcaption>'+s.c+'</figcaption></figure>';}
+  function link(l){return '<a class="btn" href="'+l.h+'" target="_blank" rel="noopener">'+l.t+'</a>';}
+  function render(p){
+    var h='<div class="pm-head"><span class="k">'+p.k+'</span><h3 id="pmTitle">'+p.t+'</h3>'+
+          '<button class="pm-close" type="button" aria-label="Close">✕</button></div>'+
+          '<div class="pm-body"><p class="pm-find">'+p.f+'</p>';
+    if(p.chips&&p.chips.length) h+='<div class="pm-chips">'+p.chips.map(chip).join('')+'</div>';
+    if(p.shots&&p.shots.length) h+='<div class="pm-shots'+(p.shots.length>1?' multi':'')+'">'+p.shots.map(shot).join('')+'</div>';
+    if(p.links&&p.links.length) h+='<div class="pm-links">'+p.links.map(link).join('')+'</div>';
+    return h+'</div>';
+  }
+  var last=null;
+  function open(key){var p=P[key]; if(!p) return; dlg.innerHTML=render(p); dlg.showModal();
+    var b=dlg.querySelector('.pm-body'); if(b)b.scrollTop=0;}
+  [].slice.call(document.querySelectorAll('.proj[data-modal]')).forEach(function(card){
+    card.setAttribute('role','button'); card.setAttribute('tabindex','0'); card.setAttribute('aria-haspopup','dialog');
+    function go(e){ if(e.target.closest('a')) return; card.style.transform=''; last=card; open(card.getAttribute('data-modal')); }
+    card.addEventListener('click',go);
+    card.addEventListener('keydown',function(e){ if((e.key==='Enter'||e.key===' ')&&!e.target.closest('a')){ e.preventDefault(); go(e); } });
+  });
+  dlg.addEventListener('click',function(e){ if(e.target===dlg||e.target.closest('.pm-close')) dlg.close(); });
+  dlg.addEventListener('close',function(){ if(last&&last.focus) last.focus(); });
+})();
+
 (function(){var y=document.getElementById('yr'); if(y)y.textContent='2026';})();
